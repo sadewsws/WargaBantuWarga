@@ -1232,42 +1232,37 @@ async function saveUsername() {
 }
 
 // Fungsi ini harus jalan setiap kali halaman di-load
-async function checkSession() {
-    // 1. Ambil data dari localStorage (yang kita set di handleLogin)
-    const savedUser = localStorage.getItem("activeUser");
-    const authStatusDiv = document.getElementById("authStatus");
-    const navPenjasaDiv = document.getElementById("navPenjasa");
+function checkSession() {
+    const user = JSON.parse(localStorage.getItem("activeUser"));
+    const authStatus = document.getElementById("authStatus");
+    const btnProfilNav = document.getElementById("btnProfilNav");
 
-    if (savedUser) {
-        const user = JSON.parse(savedUser);
-        
-        // 2. Ubah isi Navbar jadi tombol Logout & Nama/Email
-        authStatusDiv.innerHTML = `
-            <div class="flex items-center gap-3">
-                <span class="text-sm font-bold text-slate-700">Halo, ${user.email.split('@')[0]}</span>
-                <button onclick="handleLogout()" class="text-xs font-bold text-red-500 bg-red-50 px-3 py-2 rounded-xl border border-red-100 hover:bg-red-100 transition">
-                    Logout
-                </button>
-            </div>
+    if (user) {
+        // JIKA SUDAH LOGIN
+        btnProfilNav.classList.remove("hidden"); // Munculkan tombol profil
+        authStatus.innerHTML = `
+            <button onclick="handleLogout()" class="text-sm font-bold text-red-500 hover:bg-red-50 px-4 py-2 rounded-xl transition">
+                Keluar
+            </button>
         `;
-
-        // 3. Jika user adalah penjasa (mitra), tampilkan tombol ke Dashboard
-        if (user.role === 'penjasa' && navPenjasaDiv) {
-            navPenjasaDiv.innerHTML = `
-                <button onclick="showPage('dashboard')" class="text-sm font-bold text-white bg-slate-900 px-4 py-2 rounded-xl hover:bg-slate-800 transition shadow-md">
-                    Dashboard Mitra
-                </button>
-            `;
-        }
     } else {
-        // 4. Jika belum login, tampilkan tombol Login & Daftar
-        authStatusDiv.innerHTML = `
-            <button onclick="showPage('loginPage')" class="text-sm font-bold text-slate-600 hover:text-blue-600 transition">Masuk</button>
-            <button onclick="showPage('registerPage')" class="bg-blue-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-blue-100 hover:bg-blue-700 transition">Daftar</button>
+        // JIKA BELUM LOGIN (Desain baru yang kamu mau)
+        btnProfilNav.classList.add("hidden"); // Sembunyikan tombol profil
+        authStatus.innerHTML = `
+            <button onclick="showPage('loginPage')" 
+                    class="px-4 py-2 text-sm font-bold text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition rounded-xl">
+                Masuk
+            </button>
+            <button onclick="showPage('registerPage')" 
+                    class="px-5 py-2 text-sm font-bold bg-blue-600 text-white hover:bg-blue-700 transition rounded-xl shadow-md shadow-blue-100">
+                Daftar
+            </button>
         `;
-        if(navPenjasaDiv) navPenjasaDiv.innerHTML = '';
     }
 }
+
+// Panggil fungsi ini di paling bawah script.js supaya jalan pas refresh
+checkSession();
 
 // Tambahkan juga fungsi Logout
 async function handleLogout() {
