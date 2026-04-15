@@ -344,89 +344,75 @@ function toggleMobileMenu() {
 
 // --- AUTH LOGIC ---
 async function handleLogin() {
-    const email = document.getElementById("logEmail").value;
-    const pass = document.getElementById("logPass").value;
+    const emailEl = document.getElementById("logEmail");
+    const passEl = document.getElementById("logPass");
 
-    if (!email || !pass) return alert("Email dan password wajib diisi!");
+    if (!emailEl || !passEl) return alert("Input login tidak ditemukan!");
+
+    const email = emailEl.value.trim();
+    const pass = passEl.value.trim();
 
     try {
-        // 1. Proses Login Utama
-        const { data, error: authError } = await _supabase.auth.signInWithPassword({
+        console.log("Mencoba login...");
+        const { data: authData, error: authError } = await _supabase.auth.signInWithPassword({
             email: email,
             password: pass,
         });
 
         if (authError) throw authError;
 
-        // 2. FORCE REFRESH SESSION
-        // Ini kuncinya buat ngilangin 401. Kita paksa ambil session terbaru.
-        const { data: { session } } = await _supabase.auth.getSession();
-
-        if (data.user) {
-            console.log("Auth sukses, mengambil profil...");
-
-            // 3. Ambil data profil dari tabel 'users'
-            // Kita pastikan id ada dan session aktif
+        if (authData.user) {
+            // Ambil data role dari tabel users
             const { data: userData, error: dbError } = await _supabase
                 .from('users')
                 .select('*')
-                .eq('id', data.user.id)
-                .maybeSingle();
+                .eq('id', authData.user.id)
+                .single();
 
-            if (dbError) {
-                console.error("Database Fetch Error:", dbError.message);
-                // Jika error 401 tetap muncul di sini, berarti RLS di Supabase WAJIB dimatikan.
-            }
+            if (dbError) throw dbError;
 
-            // 4. Gabungkan data agar variabel global lo tetap jalan
-            const finalUser = userData ? { ...data.user, ...userData } : data.user;
+            localStorage.setItem("activeUser", JSON.stringify(userData));
+            alert("Login Sukses! Selamat datang.");
             
-            localStorage.setItem("activeUser", JSON.stringify(finalUser));
-            
-            alert("Login Berhasil!");
-            
-            // 5. Gunakan redirect yang bersih
-            window.location.href = "index.html";
+            if (typeof checkSession === 'function') checkSession();
+            showPage('marketplace');
         }
     } catch (err) {
-        console.error("Login System Error:", err.message);
-        alert("Login Gagal: " + err.message);
+        console.error("Login Error:", err.message);
+        alert("Gagal Login: " + err.message);
     }
 }
 
+// --- 2. FUNGSI REGISTER (Di Bawah Login) ---
 async function handleRegister() {
-    // 1. Ambil input dari Form Daftar
     const emailEl = document.getElementById("regEmail");
-    const passEl = document.getElementById("regPass"); // Pastikan ID ini ada di HTML lo
+    const passEl = document.getElementById("regPass");
     const roleEl = document.getElementById("regRole");
 
-    if (!emailEl || !passEl) {
-        return alert("Error: Input email atau password daftar nggak ketemu!");
-    }
+    if (!emailEl || !passEl) return alert("Input daftar tidak ditemukan!");
 
     const email = emailEl.value.trim();
     const pass = passEl.value.trim();
     const role = roleEl.value;
 
-    if (pass.length < 6) return alert("Password minimal 6 karakter ya!");
+    if (pass.length < 6) return alert("Password minimal 6 karakter!");
 
     try {
-        console.log("Memulai pendaftaran untuk:", email);
-
-        // 2. Daftarkan User ke Sistem Auth Supabase
-        const { data, error: authError } = await _supabase.auth.signUp({
+        console.log("Mencoba daftar...");
+        // Daftar ke Auth Supabase
+        const { data: authData, error: authError } = await _supabase.auth.signUp({
             email: email,
             password: pass,
         });
 
         if (authError) throw authError;
 
-        if (data.user) {
-            // 3. Masukkan data ke tabel 'users' lo
+        if (authData.user) {
+            // Simpan ke tabel users (Pastikan tipe kolom ID di Supabase adalah UUID)
             const { error: dbError } = await _supabase
                 .from('users')
                 .insert([{ 
-                    id: data.user.id, // UUID dari Auth
+                    id: authData.user.id, 
                     email: email, 
                     password: pass, 
                     role: role 
@@ -434,12 +420,12 @@ async function handleRegister() {
 
             if (dbError) throw dbError;
 
-            alert("Daftar Berhasil! Sekarang silakan login.");
-            showPage('loginPage'); // Pindah ke halaman login
+            alert("Daftar Berhasil! Silakan masuk ke halaman Login.");
+            showPage('loginPage');
         }
     } catch (err) {
-        console.error("Gagal Daftar:", err.message);
-        alert("Waduh, gagal: " + err.message);
+        console.error("Register Error:", err.message);
+        alert("Gagal Daftar: " + err.message);
     }
 }
 
