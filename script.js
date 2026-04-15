@@ -394,61 +394,52 @@ async function handleLogin() {
     }
 }
 
-async function handleLogin() {
-    const emailEl = document.getElementById("logEmail");
-    const passEl = document.getElementById("logPass");
+async function handleRegister() {
+    // 1. Ambil input dari Form Daftar
+    const emailEl = document.getElementById("regEmail");
+    const passEl = document.getElementById("regPass"); // Pastikan ID ini ada di HTML lo
+    const roleEl = document.getElementById("regRole");
 
     if (!emailEl || !passEl) {
-        return alert("Elemen input tidak ditemukan! Periksa ID logEmail dan logPass di HTML.");
+        return alert("Error: Input email atau password daftar nggak ketemu!");
     }
 
     const email = emailEl.value.trim();
     const pass = passEl.value.trim();
+    const role = roleEl.value;
 
-    if (!email || !pass) return alert("Email dan Password harus diisi!");
+    if (pass.length < 6) return alert("Password minimal 6 karakter ya!");
 
     try {
-        // 1. Proses Login ke AUTH Supabase
-        const { data: authData, error: authError } = await _supabase.auth.signInWithPassword({
+        console.log("Memulai pendaftaran untuk:", email);
+
+        // 2. Daftarkan User ke Sistem Auth Supabase
+        const { data, error: authError } = await _supabase.auth.signUp({
             email: email,
             password: pass,
         });
 
         if (authError) throw authError;
 
-        if (authData.user) {
-            // 2. Ambil data profil dari tabel 'users'
-            // Kita ambil kolom spesifik agar tidak ada data undefined
-            const { data: userData, error: dbError } = await _supabase
+        if (data.user) {
+            // 3. Masukkan data ke tabel 'users' lo
+            const { error: dbError } = await _supabase
                 .from('users')
-                .select('id, email, role, password') // Tambahkan password jika lo butuh simpan di local
-                .eq('id', authData.user.id)
-                .single();
+                .insert([{ 
+                    id: data.user.id, // UUID dari Auth
+                    email: email, 
+                    password: pass, 
+                    role: role 
+                }]);
 
-            if (dbError) {
-                console.error("Data profil tidak ditemukan di tabel users:", dbError.message);
-                throw new Error("Profil pengguna tidak ditemukan.");
-            }
+            if (dbError) throw dbError;
 
-            // 3. Simpan ke LocalStorage
-            // Pastikan userData tidak kosong sebelum disimpan
-            localStorage.setItem("activeUser", JSON.stringify(userData));
-            
-            alert("Login Berhasil! Selamat Datang.");
-            
-            // 4. Update UI & Redirect
-            // Jalankan checkSession untuk merubah Navbar secara instan
-            if (typeof checkSession === 'function') {
-                checkSession();
-            }
-            
-            // Pindahkan ke halaman utama aplikasi
-            showPage('marketplace'); 
+            alert("Daftar Berhasil! Sekarang silakan login.");
+            showPage('loginPage'); // Pindah ke halaman login
         }
     } catch (err) {
-        console.error("Login System Error:", err.message);
-        // Tips: 'Invalid login credentials' biasanya karena user belum terdaftar di AUTH
-        alert("Login Gagal: " + err.message);
+        console.error("Gagal Daftar:", err.message);
+        alert("Waduh, gagal: " + err.message);
     }
 }
 
