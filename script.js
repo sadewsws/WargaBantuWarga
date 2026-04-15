@@ -1232,33 +1232,33 @@ async function saveUsername() {
 }
 
 // Fungsi ini harus jalan setiap kali halaman di-load
+// script.js
 function checkSession() {
     const user = JSON.parse(localStorage.getItem("activeUser"));
     const authStatus = document.getElementById("authStatus");
 
-    if (!authStatus) return; 
+    if (!authStatus) return;
 
     if (user) {
-        // Jika sudah login, tampilkan tombol Keluar
+        // Jika sudah login
         authStatus.innerHTML = `
             <button onclick="handleLogout()" class="text-sm font-bold text-red-500 hover:bg-red-50 px-4 py-2 rounded-xl transition">
                 Keluar
-            </button>
-        `;
+            </button>`;
     } else {
-        // Jika belum login, tampilkan tombol Masuk & Daftar
+        // Jika belum login (Gunakan kode ini agar tampilan konsisten)
         authStatus.innerHTML = `
-            <button onclick="showPage('loginPage')" 
-                    class="px-4 py-2 text-sm font-bold text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition rounded-xl">
+            <button onclick="showPage('loginPage')" class="px-4 py-2 text-sm font-bold text-slate-600 hover:text-blue-600 transition rounded-xl">
                 Masuk
             </button>
-            <button onclick="showPage('registerPage')" 
-                    class="px-5 py-2 text-sm font-bold bg-blue-600 text-white hover:bg-blue-700 transition rounded-xl shadow-md shadow-blue-100">
+            <button onclick="showPage('registerPage')" class="px-5 py-2 text-sm font-bold bg-blue-600 text-white hover:bg-blue-700 transition rounded-xl shadow-md">
                 Daftar
-            </button>
-        `;
+            </button>`;
     }
 }
+
+// Panggil fungsi ini setiap kali halaman dimuat
+document.addEventListener('DOMContentLoaded', checkSession);
 
 // WAJIB: Panggil di paling bawah file script.js
 checkSession();
