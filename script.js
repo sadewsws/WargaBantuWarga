@@ -398,38 +398,10 @@ async function handleRegister() {
     const email = document.getElementById("regEmail").value;
     const pass = document.getElementById("regPass").value;
     const role = document.getElementById("regRole").value;
-
-    if (!email || !pass) return alert("Isi semua data!");
-
-    try {
-        // 1. Buat User di Auth Supabase
-        const { data, error: authError } = await _supabase.auth.signUp({
-            email,
-            password: pass,
-        });
-
-        if (authError) throw authError;
-
-        if (data.user) {
-            // 2. Masukkan data ke tabel 'users'
-            // Pastikan nama kolom 'id', 'email', dan 'role' ada di tabel Supabase lo
-            const { error: dbError } = await _supabase
-                .from('users')
-                .insert([
-                    { id: data.user.id, email: email, role: role }
-                ]);
-
-            if (dbError) {
-                console.error("Gagal simpan ke tabel users:", dbError.message);
-                throw dbError;
-            }
-
-            alert("Daftar sukses! Silakan login.");
-            showPage('loginPage');
-        }
-    } catch (err) {
-        alert("Register Gagal: " + err.message);
-    }
+    const { error } = await _supabase.from('users').insert([{ email, password: pass, role }]);
+    if (error) return alert("Daftar Gagal!");
+    alert("Berhasil! Silakan Login.");
+    showPage('loginPage');
 }
 
 function logout() {
