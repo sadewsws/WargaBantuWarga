@@ -312,7 +312,9 @@ async function handleLogin() {
     const email = document.getElementById("logEmail").value;
     const pass = document.getElementById("logPass").value;
 
-    // 1. Gunakan fungsi Auth resmi Supabase (BUKAN select tabel manual)
+    if (!email || !pass) return alert("Isi email dan password dulu!");
+
+    // 1. Proses Auth Resmi Supabase
     const { data, error } = await _supabase.auth.signInWithPassword({
         email: email,
         password: pass,
@@ -320,26 +322,32 @@ async function handleLogin() {
 
     if (error) {
         console.error("Login Gagal:", error.message);
-        return alert("Email atau password salah!");
+        return alert("Email atau password salah! " + error.message);
     }
 
-    // 2. Supabase otomatis mengurus sesi, tapi kita tetap simpan data user 
-    // agar kodingan lo yang lama tetap jalan tanpa banyak ubah variabel.
+    // 2. Jika Auth Berhasil, ambil data profil dari tabel 'users'
     if (data.user) {
-        // Ambil data profil tambahan dari tabel users jika lo menyimpannya di sana
-        const { data: userData } = await _supabase
+        console.log("Auth berhasil, mengambil data profil...");
+        
+        // Kita pakai data.session.access_token secara implisit agar tidak 401
+        const { data: userData, error: dbError } = await _supabase
             .from('users')
             .select('*')
-            .eq('id', data.user.id)
+            .eq('id', data.user.id) // Pastikan di tabel users kolomnya 'id', bukan 'user_id'
             .single();
 
+        if (dbError) {
+            console.warn("Data profil tidak ditemukan di tabel users, menggunakan data auth saja.");
+        }
+
+        // 3. Simpan ke activeUser agar kodingan lama lo (navbar, dll) tidak rusak
         activeUser = userData || data.user;
         localStorage.setItem("activeUser", JSON.stringify(activeUser));
         
         alert("Login Berhasil!");
         
-        // 3. Gunakan replace agar tidak bisa "back" ke halaman login lagi
-        location.replace("index.html");
+        // 4. Pindah ke halaman utama
+        window.location.replace("index.html");
     }
 }
 
