@@ -396,12 +396,46 @@ async function handleLogin() {
 
 async function handleRegister() {
     const email = document.getElementById("regEmail").value;
-    const pass = document.getElementById("regPass").value;
+    const pass = document.getElementById("logPass").value; // Pastikan ID input pass di HTML benar
     const role = document.getElementById("regRole").value;
-    const { error } = await _supabase.from('users').insert([{ email, password: pass, role }]);
-    if (error) return alert("Daftar Gagal!");
-    alert("Berhasil! Silakan Login.");
-    showPage('loginPage');
+
+    if (!email || !pass) return alert("Email dan password wajib diisi!");
+
+    try {
+        // 1. DAFTARKAN KE AUTH (Sistem Keamanan Supabase)
+        const { data, error: authError } = await _supabase.auth.signUp({
+            email: email,
+            password: pass,
+        });
+
+        if (authError) throw authError;
+
+        if (data.user) {
+            // 2. SIMPAN PROFIL KE TABEL 'users'
+            // Gunakan ID dari auth tadi (data.user.id) agar sinkron
+            const { error: dbError } = await _supabase
+                .from('users')
+                .insert([
+                    { 
+                        id: data.user.id, 
+                        email: email, 
+                        role: role 
+                    }
+                ]);
+
+            if (dbError) {
+                console.error("Gagal simpan profil:", dbError.message);
+                // Jika error 406 muncul di sini, cek apakah kolom 'role' sudah ada di Supabase
+                throw dbError;
+            }
+
+            alert("Pendaftaran Berhasil! Silakan cek email (jika konfirmasi nyala) atau langsung Login.");
+            showPage('loginPage');
+        }
+    } catch (err) {
+        console.error("Register Error:", err.message);
+        alert("Daftar Gagal: " + err.message);
+    }
 }
 
 function logout() {
