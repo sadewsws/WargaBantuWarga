@@ -1233,21 +1233,22 @@ async function saveUsername() {
 
 // Fungsi ini harus jalan setiap kali halaman di-load
 function checkSession() {
+    console.log("Fungsi checkSession sedang berjalan..."); // Cek di console browser
+    
     const user = JSON.parse(localStorage.getItem("activeUser"));
     const authStatus = document.getElementById("authStatus");
-    const btnProfilNav = document.getElementById("btnProfilNav");
+
+    if (!authStatus) return; // Jaga-jaga kalau elementnya gak ketemu
 
     if (user) {
-        // JIKA SUDAH LOGIN
-        btnProfilNav.classList.remove("hidden"); // Munculkan tombol profil
+        console.log("Status: User sudah login sebagai", user.email);
         authStatus.innerHTML = `
             <button onclick="handleLogout()" class="text-sm font-bold text-red-500 hover:bg-red-50 px-4 py-2 rounded-xl transition">
                 Keluar
             </button>
         `;
     } else {
-        // JIKA BELUM LOGIN (Desain baru yang kamu mau)
-        btnProfilNav.classList.add("hidden"); // Sembunyikan tombol profil
+        console.log("Status: Belum login, memuat tombol baru...");
         authStatus.innerHTML = `
             <button onclick="showPage('loginPage')" 
                     class="px-4 py-2 text-sm font-bold text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition rounded-xl">
@@ -1260,6 +1261,9 @@ function checkSession() {
         `;
     }
 }
+
+// WAJIB: Panggil di paling bawah file script.js
+checkSession();
 
 // Panggil fungsi ini di paling bawah script.js supaya jalan pas refresh
 checkSession();
