@@ -64,8 +64,17 @@
     Profil
 </button>
             <div id="navPenjasa" class="flex items-center gap-2"></div> 
-            <div id="authStatus" class="flex items-center gap-2 border-l pl-4 border-slate-200"></div>
-        </div>
+            <div id="authStatus" class="flex items-center gap-3 border-l pl-4 border-slate-200">
+    <button onclick="showPage('loginPage')" 
+            class="px-4 py-2 text-sm font-bold text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition rounded-xl">
+        Masuk
+    </button>
+
+    <button onclick="showPage('registerPage')" 
+            class="px-5 py-2 text-sm font-bold bg-blue-600 text-white hover:bg-blue-700 transition rounded-xl shadow-md shadow-blue-100">
+        Daftar
+    </button>
+</div>
 
         <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-slate-600">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
