@@ -395,14 +395,26 @@ async function handleLogin() {
 }
 
 async function handleRegister() {
-    const email = document.getElementById("regEmail").value;
-    const pass = document.getElementById("logPass").value; // Pastikan ID input pass di HTML benar
-    const role = document.getElementById("regRole").value;
+    // 1. Ambil elemennya dulu
+    const emailEl = document.getElementById("regEmail");
+    const passEl = document.getElementById("regPass"); // PASTIKAN ID DI HTML ADALAH 'regPass'
+    const roleEl = document.getElementById("regRole");
 
-    if (!email || !pass) return alert("Email dan password wajib diisi!");
+    // 2. Validasi apakah elemennya ada
+    if (!emailEl || !passEl) {
+        return alert("Error: Element input tidak ditemukan. Cek ID di HTML lo!");
+    }
+
+    const email = emailEl.value;
+    const pass = passEl.value;
+    const role = roleEl.value;
+
+    if (!email || !pass) return alert("Email dan password nggak boleh kosong!");
 
     try {
-        // 1. DAFTARKAN KE AUTH (Sistem Keamanan Supabase)
+        console.log("Mencoba mendaftarkan:", email);
+        
+        // Step 1: Registrasi ke Auth Supabase
         const { data, error: authError } = await _supabase.auth.signUp({
             email: email,
             password: pass,
@@ -411,30 +423,19 @@ async function handleRegister() {
         if (authError) throw authError;
 
         if (data.user) {
-            // 2. SIMPAN PROFIL KE TABEL 'users'
-            // Gunakan ID dari auth tadi (data.user.id) agar sinkron
+            // Step 2: Masukkan ke tabel profil 'users'
             const { error: dbError } = await _supabase
                 .from('users')
-                .insert([
-                    { 
-                        id: data.user.id, 
-                        email: email, 
-                        role: role 
-                    }
-                ]);
+                .insert([{ id: data.user.id, email: email, role: role }]);
 
-            if (dbError) {
-                console.error("Gagal simpan profil:", dbError.message);
-                // Jika error 406 muncul di sini, cek apakah kolom 'role' sudah ada di Supabase
-                throw dbError;
-            }
+            if (dbError) throw dbError;
 
-            alert("Pendaftaran Berhasil! Silakan cek email (jika konfirmasi nyala) atau langsung Login.");
+            alert("Berhasil Daftar! Sekarang silakan login.");
             showPage('loginPage');
         }
     } catch (err) {
-        console.error("Register Error:", err.message);
-        alert("Daftar Gagal: " + err.message);
+        console.error("Gagal total:", err.message);
+        alert("Waduh, gagal: " + err.message);
     }
 }
 
