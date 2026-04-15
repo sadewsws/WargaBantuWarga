@@ -312,42 +312,48 @@ async function handleLogin() {
     const email = document.getElementById("logEmail").value;
     const pass = document.getElementById("logPass").value;
 
-    if (!email || !pass) return alert("Isi email dan password dulu!");
+    if (!email || !pass) return alert("Email dan password wajib diisi!");
 
-    // 1. Proses Auth Resmi Supabase
-    const { data, error } = await _supabase.auth.signInWithPassword({
-        email: email,
-        password: pass,
-    });
+    try {
+        // 1. Proses Login Resmi
+        const { data, error: authError } = await _supabase.auth.signInWithPassword({
+            email,
+            password: pass,
+        });
 
-    if (error) {
-        console.error("Login Gagal:", error.message);
-        return alert("Email atau password salah! " + error.message);
-    }
+        if (authError) throw authError;
 
-    // 2. Jika Auth Berhasil, ambil data profil dari tabel 'users'
-    if (data.user) {
-        console.log("Auth berhasil, mengambil data profil...");
-        
-        // Kita pakai data.session.access_token secara implisit agar tidak 401
-        const { data: userData, error: dbError } = await _supabase
-            .from('users')
-            .select('*')
-            .eq('id', data.user.id) // Pastikan di tabel users kolomnya 'id', bukan 'user_id'
-            .single();
+        // 2. Tunggu sebentar (delay 500ms) untuk memastikan sesi terdaftar di browser
+        // Ini trik khusus buat ngatasin error 401 di hostingan gratisan
+        await new Promise(resolve => setTimeout(resolve, 500));
 
-        if (dbError) {
-            console.warn("Data profil tidak ditemukan di tabel users, menggunakan data auth saja.");
+        if (data.user) {
+            console.log("Auth sukses, mencari data profil untuk ID:", data.user.id);
+            
+            // 3. Ambil data profil dari tabel 'users'
+            // Gunakan .maybeSingle() agar tidak error jika data profil belum ada
+            const { data: userData, error: dbError } = await _supabase
+                .from('users')
+                .select('*')
+                .eq('id', data.user.id)
+                .maybeSingle();
+
+            if (dbError) console.error("Database Error:", dbError.message);
+
+            // 4. Gabungkan data Auth dan Data Database
+            const finalUser = { ...data.user, ...userData };
+            
+            // Simpan ke localStorage untuk mendukung kodingan lama lo
+            localStorage.setItem("activeUser", JSON.stringify(finalUser));
+            
+            alert("Login Berhasil! Selamat datang di WargaBantuWarga.");
+            
+            // 5. Gunakan replace agar history browser bersih
+            window.location.replace("index.html");
         }
-
-        // 3. Simpan ke activeUser agar kodingan lama lo (navbar, dll) tidak rusak
-        activeUser = userData || data.user;
-        localStorage.setItem("activeUser", JSON.stringify(activeUser));
-        
-        alert("Login Berhasil!");
-        
-        // 4. Pindah ke halaman utama
-        window.location.replace("index.html");
+    } catch (err) {
+        console.error("Login System Error:", err.message);
+        alert("Login Gagal: " + err.message);
     }
 }
 
