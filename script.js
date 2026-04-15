@@ -286,10 +286,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // --- NAVIGATION ---
 function showPage(id) {
-    document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    if(id === 'dashboard') fetchMyJasa();
-    window.scrollTo(0,0);
+    // 1. Validasi Keamanan (Proteksi Halaman Dashboard & Orders)
+    const isGuest = !localStorage.getItem("activeUser");
+    
+    if ((id === 'dashboard' || id === 'orders') && isGuest) {
+        alert("Waduh, login dulu yuk biar bisa akses fitur ini!");
+        return showPage('loginPage'); // Lempar balik ke login
+    }
+
+    // 2. Ganti Halaman (Logika Utama Lo)
+    const sections = document.querySelectorAll('.page-section');
+    const targetSection = document.getElementById(id);
+
+    if (targetSection) {
+        sections.forEach(s => s.classList.remove('active'));
+        targetSection.classList.add('active');
+    } else {
+        console.error("Halaman dengan ID " + id + " nggak ketemu!");
+        return;
+    }
+
+    // 3. Trigger Fungsi Spesifik per Halaman (Sinkronisasi Data)
+    if (id === 'dashboard') {
+        // Pastikan fungsi fetch data mitra dipanggil
+        if (typeof fetchMyJasa === 'function') fetchMyJasa();
+        if (typeof renderMitraOrders === 'function') renderMitraOrders();
+    }
+    
+    if (id === 'marketplace') {
+        if (typeof renderJasa === 'function') renderJasa();
+    }
+
+    if (id === 'orders') {
+        if (typeof renderOrders === 'function') renderOrders();
+    }
+
+    // 4. Reset Posisi Scroll & Tutup Mobile Menu (Jika sedang terbuka)
+    window.scrollTo(0, 0);
+    const mobileMenu = document.getElementById("mobileMenu");
+    if (mobileMenu) mobileMenu.classList.add("hidden");
 }
 
 function toggleMobileMenu() {
@@ -315,41 +350,43 @@ async function handleLogin() {
     if (!email || !pass) return alert("Email dan password wajib diisi!");
 
     try {
-        // 1. Proses Login Resmi
+        // 1. Proses Login Utama
         const { data, error: authError } = await _supabase.auth.signInWithPassword({
-            email,
+            email: email,
             password: pass,
         });
 
         if (authError) throw authError;
 
-        // 2. Tunggu sebentar (delay 500ms) untuk memastikan sesi terdaftar di browser
-        // Ini trik khusus buat ngatasin error 401 di hostingan gratisan
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // 2. FORCE REFRESH SESSION
+        // Ini kuncinya buat ngilangin 401. Kita paksa ambil session terbaru.
+        const { data: { session } } = await _supabase.auth.getSession();
 
         if (data.user) {
-            console.log("Auth sukses, mencari data profil untuk ID:", data.user.id);
-            
+            console.log("Auth sukses, mengambil profil...");
+
             // 3. Ambil data profil dari tabel 'users'
-            // Gunakan .maybeSingle() agar tidak error jika data profil belum ada
+            // Kita pastikan id ada dan session aktif
             const { data: userData, error: dbError } = await _supabase
                 .from('users')
                 .select('*')
                 .eq('id', data.user.id)
                 .maybeSingle();
 
-            if (dbError) console.error("Database Error:", dbError.message);
+            if (dbError) {
+                console.error("Database Fetch Error:", dbError.message);
+                // Jika error 401 tetap muncul di sini, berarti RLS di Supabase WAJIB dimatikan.
+            }
 
-            // 4. Gabungkan data Auth dan Data Database
-            const finalUser = { ...data.user, ...userData };
+            // 4. Gabungkan data agar variabel global lo tetap jalan
+            const finalUser = userData ? { ...data.user, ...userData } : data.user;
             
-            // Simpan ke localStorage untuk mendukung kodingan lama lo
             localStorage.setItem("activeUser", JSON.stringify(finalUser));
             
-            alert("Login Berhasil! Selamat datang di WargaBantuWarga.");
+            alert("Login Berhasil!");
             
-            // 5. Gunakan replace agar history browser bersih
-            window.location.replace("index.html");
+            // 5. Gunakan redirect yang bersih
+            window.location.href = "index.html";
         }
     } catch (err) {
         console.error("Login System Error:", err.message);
@@ -1168,3 +1205,52 @@ async function saveUsername() {
         if (btn) btn.disabled = false;
     }
 }
+
+// Fungsi ini harus jalan setiap kali halaman di-load
+async function checkSession() {
+    // 1. Ambil data dari localStorage (yang kita set di handleLogin)
+    const savedUser = localStorage.getItem("activeUser");
+    const authStatusDiv = document.getElementById("authStatus");
+    const navPenjasaDiv = document.getElementById("navPenjasa");
+
+    if (savedUser) {
+        const user = JSON.parse(savedUser);
+        
+        // 2. Ubah isi Navbar jadi tombol Logout & Nama/Email
+        authStatusDiv.innerHTML = `
+            <div class="flex items-center gap-3">
+                <span class="text-sm font-bold text-slate-700">Halo, ${user.email.split('@')[0]}</span>
+                <button onclick="handleLogout()" class="text-xs font-bold text-red-500 bg-red-50 px-3 py-2 rounded-xl border border-red-100 hover:bg-red-100 transition">
+                    Logout
+                </button>
+            </div>
+        `;
+
+        // 3. Jika user adalah penjasa (mitra), tampilkan tombol ke Dashboard
+        if (user.role === 'penjasa' && navPenjasaDiv) {
+            navPenjasaDiv.innerHTML = `
+                <button onclick="showPage('dashboard')" class="text-sm font-bold text-white bg-slate-900 px-4 py-2 rounded-xl hover:bg-slate-800 transition shadow-md">
+                    Dashboard Mitra
+                </button>
+            `;
+        }
+    } else {
+        // 4. Jika belum login, tampilkan tombol Login & Daftar
+        authStatusDiv.innerHTML = `
+            <button onclick="showPage('loginPage')" class="text-sm font-bold text-slate-600 hover:text-blue-600 transition">Masuk</button>
+            <button onclick="showPage('registerPage')" class="bg-blue-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-blue-100 hover:bg-blue-700 transition">Daftar</button>
+        `;
+        if(navPenjasaDiv) navPenjasaDiv.innerHTML = '';
+    }
+}
+
+// Tambahkan juga fungsi Logout
+async function handleLogout() {
+    await _supabase.auth.signOut();
+    localStorage.removeItem("activeUser");
+    alert("Berhasil Logout!");
+    window.location.reload(); // Refresh biar navbar balik ke awal
+}
+
+// JALANKAN FUNGSI INI SAAT WINDOW DIBUKA
+window.onload = checkSession;
