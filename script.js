@@ -1,5 +1,5 @@
-const SUPABASE_URL = 'https://gbddvwesezgljaypzlsg.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdiZGR2d2VzZXpnbGpheXB6bHNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwNDM2MjYsImV4cCI6MjA5MTYxOTYyNn0.PT64j-Ee9PZ2AVa32j9oaWgHW8YJWNKOVFcRKjKqp_Y'; // Gunakan key Anda
+const SUPABASE_URL = 'https://hwolvggrgdtduuxdyzdt.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh3b2x2Z2dyZ2R0ZHV1eGR5emR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwOTQwMTAsImV4cCI6MjA5MTY3MDAxMH0.W8TFYsLr1WoediCkL9ahK6w24tOmvgayDV59uI1x-mY'; // Gunakan key Anda
 
 
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
