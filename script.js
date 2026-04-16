@@ -286,15 +286,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // --- NAVIGATION ---
 function showPage(id) {
-    // 1. Validasi Keamanan (Proteksi Halaman Dashboard & Orders)
-    const isGuest = !localStorage.getItem("activeUser");
+    // 1. Validasi Keamanan (Proteksi Dashboard, Orders, & Mitra)
+    const activeUser = JSON.parse(localStorage.getItem("activeUser"));
+    const isGuest = !activeUser;
     
-    if ((id === 'dashboard' || id === 'orders') && isGuest) {
+    // Tambahkan 'mitraPage' ke proteksi supaya orang gak bisa daftar mitra tanpa login
+    if ((id === 'dashboard' || id === 'orders' || id === 'mitraPage') && isGuest) {
         alert("Waduh, login dulu yuk biar bisa akses fitur ini!");
-        return showPage('loginPage'); // Lempar balik ke login
+        return showPage('loginPage'); 
     }
 
-    // 2. Ganti Halaman (Logika Utama Lo)
+    // 2. Logika Perpindahan Halaman
     const sections = document.querySelectorAll('.page-section');
     const targetSection = document.getElementById(id);
 
@@ -302,29 +304,43 @@ function showPage(id) {
         sections.forEach(s => s.classList.remove('active'));
         targetSection.classList.add('active');
     } else {
-        console.error("Halaman dengan ID " + id + " nggak ketemu!");
-        return;
+        // Fallback jika ID salah, arahkan ke homePage
+        console.warn(`Halaman ${id} tidak ditemukan, kembali ke home.`);
+        return showPage('homePage');
     }
 
-    // 3. Trigger Fungsi Spesifik per Halaman (Sinkronisasi Data)
-    if (id === 'dashboard') {
-        // Pastikan fungsi fetch data mitra dipanggil
-        if (typeof fetchMyJasa === 'function') fetchMyJasa();
-        if (typeof renderMitraOrders === 'function') renderMitraOrders();
+    // 3. Sinkronisasi Data (PENTING: Gunakan Fetch, bukan cuma Render)
+    switch(id) {
+        case 'homePage':
+            // Load ulang jasa terbaru setiap balik ke home
+            if (typeof fetchJasa === 'function') fetchJasa();
+            break;
+            
+        case 'dashboard':
+            // Load data khusus mitra
+            if (typeof fetchMyJasa === 'function') fetchMyJasa();
+            if (typeof renderMitraOrders === 'function') renderMitraOrders();
+            break;
+
+        case 'orders':
+            // Load riwayat pesanan user
+            if (typeof fetchOrders === 'function') fetchOrders(); 
+            break;
+            
+        case 'detailJasa':
+            // Pastikan komentar di-load saat buka detail
+            if (typeof fetchComments === 'function') fetchComments(currentJasaId);
+            break;
     }
+
+    // 4. Reset UI & Scroll
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     
-    if (id === 'marketplace') {
-        if (typeof renderJasa === 'function') renderJasa();
-    }
-
-    if (id === 'orders') {
-        if (typeof renderOrders === 'function') renderOrders();
-    }
-
-    // 4. Reset Posisi Scroll & Tutup Mobile Menu (Jika sedang terbuka)
-    window.scrollTo(0, 0);
+    // Tutup menu mobile otomatis jika ada
     const mobileMenu = document.getElementById("mobileMenu");
-    if (mobileMenu) mobileMenu.classList.add("hidden");
+    if (mobileMenu && !mobileMenu.classList.contains("hidden")) {
+        mobileMenu.classList.add("hidden");
+    }
 }
 
 function toggleMobileMenu() {
