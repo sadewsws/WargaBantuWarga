@@ -1007,34 +1007,76 @@ async function fetchMitraOrders() {
     updateMitraStats(data);
 }
 
-function renderMitraOrders(orders) {
-    const container = document.getElementById("mitraOrderList");
-    if (!container) return;
+async function renderMitraOrders() {
+    const container = document.getElementById('mitra-orders-list');
+    if (!container || !activeUser) return;
 
-    // 🔥 FIX: pastikan array
-    if (!Array.isArray(orders)) orders = [];
+    // 1. Ambil semua Jasa yang didaftarkan oleh user ini (Mitra)
+    // Di tabel jasa, pastikan kolomnya bernama 'user_id' atau sesuaikan jika berbeda
+    const { data: myJasa, error: jasaError } = await _supabase
+        .from('jasa')
+        .select('id')
+        .eq('user_id', activeUser.id); 
 
-    if (orders.length === 0) {
-        container.innerHTML = `
-            <div class="p-8 border-2 border-dashed rounded-3xl text-center text-slate-400 italic">
-                Menunggu pesanan pertama Anda...
-            </div>`;
+    if (jasaError) return console.error("Gagal ambil jasa:", jasaError);
+
+    if (!myJasa || myJasa.length === 0) {
+        container.innerHTML = '<p class="text-slate-500 italic p-4 text-center">Anda belum mendaftarkan jasa apapun.</p>';
         return;
     }
 
-    container.innerHTML = orders.map(order => `
-        <div class="bg-white border p-5 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4">
-            <div>
-                <p class="font-bold text-slate-800">${order.jasa_nama}</p>
-                <p class="text-xs text-slate-500">Buyer: ${order.buyer_id}</p>
-            </div>
+    // Ambil daftar ID jasa milik mitra ini
+    const myJasaIds = myJasa.map(j => j.id);
 
-            <span class="text-xs font-bold bg-blue-50 text-blue-600 px-3 py-1 rounded-full">
-                ${order.status || 'Baru'}
-            </span>
+    // 2. Ambil pesanan yang masuk ke jasa-jasa tersebut
+    const { data: orders, error: orderError } = await _supabase
+        .from('orders')
+        .select(`
+            *,
+            profiles:buyer_id (username)
+        `) // Kita joinkan ke profiles lewat buyer_id untuk tahu siapa pemesannya
+        .in('jasa_id', myJasaIds)
+        .order('created_at', { ascending: false });
+
+    if (orderError) return console.error("Gagal ambil pesanan:", orderError);
+
+    if (!orders || orders.length === 0) {
+        container.innerHTML = '<p class="text-slate-500 italic p-4 text-center">Belum ada pesanan masuk untuk jasa Anda.</p>';
+        return;
+    }
+
+    // 3. Render list pesanan ke HTML
+    container.innerHTML = orders.map(order => `
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <p class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">ID Pesanan: #${order.id.toString().slice(0,5)}</p>
+                <p class="font-bold text-slate-800 text-lg">Pemesan: ${order.profiles?.username || 'Warga'}</p>
+                <div class="flex items-center gap-2 mt-1">
+                    <span class="w-2 h-2 rounded-full ${order.status === 'pending' ? 'bg-yellow-400' : 'bg-green-400'}"></span>
+                    <p class="text-sm text-slate-500 capitalize">Status: ${order.status}</p>
+                </div>
+            </div>
+            
+            <div class="flex gap-2 w-full md:w-auto">
+                ${order.status === 'pending' ? `
+                    <button onclick="updateOrderStatus('${order.id}', 'proses')" 
+                            class="flex-1 md:flex-none bg-blue-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-blue-700 transition">
+                        Terima
+                    </button>
+                    <button onclick="updateOrderStatus('${order.id}', 'tolak')" 
+                            class="flex-1 md:flex-none bg-red-50 text-red-500 px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-red-100 transition">
+                        Tolak
+                    </button>
+                ` : `
+                    <span class="px-4 py-2 bg-slate-100 text-slate-500 rounded-xl text-sm font-bold capitalize">
+                        ${order.status}
+                    </span>
+                `}
+            </div>
         </div>
     `).join('');
 }
+
 async function updateOrderStatus(orderId, newStatus) {
     const { error } = await _supabase
         .from('orders')
