@@ -1,7 +1,7 @@
 Nama Anggota Kelompok
-Rio Sadewa (418250100590) Ketua
-Joel Rondonuwu (41825010011)
-Raya Gibran Bachtiar (41825010081)
+1. Rio Sadewa (418250100590) (Ketua)
+2. Joel Rondonuwu (41825010011)
+3. Raya Gibran Bachtiar (41825010081)
 
 Cara Instalasi & Menjalankan
 
