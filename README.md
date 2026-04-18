@@ -15,7 +15,7 @@ Buka file `script.js` dan pastikan konfigurasi API sudah sesuai dengan project:
 
 3. Menjalankan Server Lokal
 Karena aplikasi ini menggunakan ES Modules dan Google Auth, aplikasi tidak bisa dijalankan hanya dengan klik kanan > open file. wajib menggunakan server:
-- VS Code: Gunakan ekstensi Live Server**. Klik kanan pada `index.html` lalu pilih *Open with Live Server*.
+- VS Code: Gunakan ekstensi Live Server. Klik kanan pada `index.html` lalu pilih Open with Live Server.
 - Akses: Aplikasi akan berjalan di `http://127.0.0.1:5500`.
 
 Fitur Aplikasi
