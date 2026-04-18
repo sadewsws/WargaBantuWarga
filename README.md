@@ -9,7 +9,7 @@ Cara Instalasi & Menjalankan
 Pastikan file `index.html` dan `script.js` berada dalam satu folder yang sama.
 
 2. Konfigurasi Backend (Supabase)
-Buka file `script.js` dan pastikan konfigurasi API sudah sesuai dengan project kamu:
+Buka file `script.js` dan pastikan konfigurasi API sudah sesuai dengan project:
 - `SUPABASE_URL`: URL project Supabase.
 - `SUPABASE_KEY`: Public Anon Key.
 
