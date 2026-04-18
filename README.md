@@ -25,7 +25,7 @@ Fitur Aplikasi
 - Order Tracking: Riwayat pesanan untuk memantau status jasa yang dipesan.
 - Auth: Mendukung Login Email/Password dan Google Sign-In.
 
-## 📦 Teknologi
+Stack teknologi yang digunakan
 - Frontend: HTML5, Tailwind CSS, JavaScript (Vanilla).
 - Backend: Supabase (Auth, Database, Storage).
 - Icons: Lucide Icons & Google Material Symbols.
