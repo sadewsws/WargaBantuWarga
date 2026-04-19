@@ -4955,7 +4955,7 @@ var _devData = {
         role:   'Mahasiswa Sistem Informasi — Universitas Mercu Buana',
         bio:    'Hai, terima kasih sudah berkunjung! Saya masih dalam tahap awal sebagai developer, tapi punya semangat besar untuk terus belajar dan berkembang. Saya tertarik mengeksplorasi teknologi baru, membangun proyek sederhana, dan memperbaiki diri dari setiap kesalahan. Ke depan, saya ingin menjadi developer yang tidak hanya bisa coding, tapi juga memberi solusi nyata.',
         skills: ['HTML', 'CSS', 'JavaScript'],
-        hobi:   'Musik (mendengarkan dan bermain)',
+        hobi:   'Musik',
         github: 'https://github.com/sadewsws',
         ig:     'https://www.instagram.com/riosdwaa?igsh=NG82dnFuMm5yYzJ3&utm_source=qr',
         igName: '@riosdwaa',
