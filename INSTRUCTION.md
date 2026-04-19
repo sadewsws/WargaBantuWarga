@@ -37,7 +37,7 @@ Tidak perlu setup apapun — buka URL di browser dan langsung bisa digunakan.
 
 **1. Clone repository**
 ```bash
-git clone https://github.com/GASPOL-BERTIGA/wargabantuwarga.git
+git clone https://github.com/sadewsws/wargabantuwarga.git
 cd wargabantuwarga
 ```
 
@@ -76,7 +76,6 @@ wargabantuwarga/
 ├── script.js           # Seluruh logika JavaScript
 ├── README.md           # Dokumentasi proyek
 ├── INSTRUCTION.md      # File ini — panduan instalasi & running
-└── assets/             # (opsional) gambar statis jika ada
 ```
 
 ---
