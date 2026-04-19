@@ -56,8 +56,7 @@
 
         <div class="hidden md:flex gap-8 items-center">
     <button onclick="showPage('home')" class="text-sm font-bold text-slate-600 hover:text-blue-600 transition">Beranda</button>
-    <button onclick="showPage('marketplace')" class="text-sm font-bold text-slate-600 hover:text-blue-600 transition">Cari Jasa</button>
-    <button onclick="showPage('orders')" class="text-sm font-bold text-slate-600 hover:text-blue-600 transition">Pesanan</button>
+    <button onclick="showPage('marketplace')" class="text-sm font-bold text-slate-600 hover:text-blue-600 transition">Telusuri</button>
     <button onclick="showPage('contactPage')" class="text-sm font-bold text-slate-600 hover:text-blue-600 transition">Hubungi Kami</button>
     <button onclick="showPage('chatPage')" class="text-sm font-bold text-slate-600 hover:text-blue-600 transition flex items-center gap-1">
         Obrolan
@@ -83,11 +82,10 @@
     <div id="mobileMenu" class="fixed inset-0 bg-white z-[60] flex flex-col p-8 gap-6 hidden">
         <div class="flex justify-between items-center mb-4">
             <div class="text-xl font-bold text-blue-600">Menu</div>
-            <button onclick="toggleMobileMenu()" class="text-3xl text-slate-400">✕</button>
+            <button onclick="toggleMobileMenu()" class="text-3xl text-slate-400"></button>
         </div>
         <button onclick="showPage('home')" class="text-2xl font-bold text-slate-800 text-left border-b pb-4">Beranda</button>
-        <button onclick="showPage('marketplace')" class="text-2xl font-bold text-slate-800 text-left border-b pb-4">Cari Jasa</button>
-        <button onclick="showPage('orders')" class="text-2xl font-bold text-slate-800 text-left border-b pb-4">Riwayat Pesanan</button>
+        <button onclick="showPage('marketplace')" class="text-2xl font-bold text-slate-800 text-left border-b pb-4">Telusuri</button>
         <button onclick="showPage('contactPage'); closeMobileMenu()" class="text-2xl font-bold text-slate-800 text-left border-b pb-4">Hubungi Kami</button>
         <button onclick="showPage('chatPage')" class="text-2xl font-bold text-slate-800 text-left border-b pb-4 flex items-center gap-2">
             Obrolan
@@ -126,8 +124,8 @@
                     Cari Jasa Sekarang
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                 </button>
-                <button onclick="checkPenjasaAccess()" class="bg-white border-2 border-slate-200 text-slate-700 px-10 py-5 rounded-2xl font-bold hover:bg-slate-50 hover:border-slate-300 transition-all">
-                    Halaman Mitra Jasa
+                <button onclick="aksesDashboard()" class="bg-white border-2 border-slate-200 text-slate-700 px-10 py-5 rounded-2xl font-bold hover:bg-slate-50 hover:border-slate-300 transition-all">
+                    Dashboard Saya
                 </button>
             </div>
             
@@ -139,7 +137,7 @@
                 <div class="w-px h-10 bg-slate-200"></div>
                 <div>
                     <p id="heroTotalJasaText" class="text-2xl font-bold text-slate-900">—</p>
-                    <p class="text-sm text-slate-500 font-medium italic">Total Jasa Tersedia</p>
+                    <p class="text-sm text-slate-500 font-medium italic">TotalJasa Tersedia</p>
                 </div>
                 <div class="w-px h-10 bg-slate-200"></div>
                 <div>
@@ -148,9 +146,9 @@
                 </div>
             </div>
 
-            <!-- Jasa Terpopuler khusus mobile -->
+            <!--Jasa Terpopuler khusus mobile -->
             <div class="block md:hidden mt-8 bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
-                <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-3">🔥 Jasa Terpopuler</p>
+                <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-3">Jasa Terpopuler</p>
                 <div id="heroPopularListMobile" class="space-y-2">
                     <div class="flex items-center gap-2">
                         <div class="w-7 h-7 rounded-lg bg-blue-50 animate-pulse"></div>
@@ -168,7 +166,7 @@
 
             <!-- Card desktop: absolute di atas gambar -->
             <div id="heroPopularCard" class="hidden md:block absolute -bottom-6 -left-10 bg-white p-5 rounded-3xl shadow-2xl z-20 border border-slate-100 max-w-[220px]">
-                <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-3">🔥 Jasa Terpopuler</p>
+                <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-3">Jasa Terpopuler</p>
                 <div id="heroPopularList" class="space-y-2">
                     <div class="flex items-center gap-2">
                         <div class="w-7 h-7 rounded-lg bg-blue-50 animate-pulse"></div>
@@ -261,44 +259,99 @@
 </section>
 
     <section id="marketplace" class="page-section p-6 max-w-6xl mx-auto">
-        <div class="flex flex-col md:flex-row gap-4 w-full mb-8">
-    <div class="relative flex-1">
-        <input type="text" id="searchInput" oninput="applyFilters()" placeholder="Cari jasa atau lokasi..." 
-               class="w-full border p-4 rounded-2xl outline-none focus:ring-2 ring-blue-500 bg-white">
-    </div>
 
-    <button onclick="toggleCategoryModal()" class="flex items-center justify-center gap-2 border p-4 rounded-2xl bg-white font-bold text-slate-600 hover:border-blue-500 transition">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-        </svg>
-        <span id="currentCatText">Semua Kategori</span>
-    </button>
+        <!-- Tab Telusuri: Jasa & Kebutuhan -->
+        <div class="mb-6">
+            <h2 class="text-2xl font-extrabold text-slate-900 mb-1">Telusuri</h2>
+            <p class="text-slate-400 text-sm mb-4">Cari jasa tersedia atau lihat kebutuhan yang menunggu penyedia</p>
+            <div class="bg-white border border-slate-200 rounded-2xl p-1 flex gap-1 shadow-sm inline-flex">
+                <button id="tabJasaBtn" onclick="showMarketplaceTab('jasa')"
+                    class="px-5 py-2.5 rounded-xl text-sm font-bold transition bg-blue-600 text-white shadow">
+                   Jasa Tersedia
+                </button>
+                <button id="tabKebutuhanBtn" onclick="showMarketplaceTab('kebutuhan')"
+                    class="px-5 py-2.5 rounded-xl text-sm font-bold transition text-slate-500 hover:bg-slate-50">
+                    Butuh Jasa
+                    <span id="kebutuhanBadge" class="hidden ml-1 bg-orange-500 text-white text-[9px] px-1.5 py-0.5 rounded-full">0</span>
+                </button>
+            </div>
+        </div>
 
-    <select id="sortFilter" onchange="applyFilters()" class="border p-4 rounded-2xl outline-none bg-white font-bold text-slate-600 cursor-pointer">
-        <option value="terbaru">Terbaru</option>
-        <option value="terdekat">📍 Terdekat</option>
-        <option value="termurah">Harga Termurah</option>
-        <option value="termahal">Harga Termahal</option>
-    </select>
-</div>
-        <div id="jasaContainer" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+        <!-- Panel Jasa -->
+        <div id="panelMarketJasa">
+            <div class="flex flex-col md:flex-row gap-4 w-full mb-8">
+                <div class="relative flex-1">
+                    <input type="text" id="searchInput" oninput="applyFilters()" placeholder="Cari jasa atau lokasi..."
+                           class="w-full border p-4 rounded-2xl outline-none focus:ring-2 ring-blue-500 bg-white">
+                </div>
+                <button onclick="toggleCategoryModal()" class="flex items-center justify-center gap-2 border p-4 rounded-2xl bg-white font-bold text-slate-600 hover:border-blue-500 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                    </svg>
+                    <span id="currentCatText">Semua Kategori</span>
+                </button>
+                <select id="sortFilter" onchange="applyFilters()" class="border p-4 rounded-2xl outline-none bg-white font-bold text-slate-600 cursor-pointer">
+                    <option value="terbaru">Terbaru</option>
+                    <option value="terdekat">Terdekat</option>
+                    <option value="termurah">Harga Termurah</option>
+                    <option value="termahal">Harga Termahal</option>
+                </select>
+            </div>
+            <div id="jasaContainer" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+        </div>
+
+        <!-- Panel Kebutuhan (Butuh Jasa) -->
+        <div id="panelMarketKebutuhan" class="hidden">
+            <div class="flex flex-col md:flex-row gap-4 w-full mb-8">
+                <div class="relative flex-1">
+                    <input type="text" id="searchKebutuhan" oninput="filterKebutuhanPublic()" placeholder="Cari kebutuhan atau lokasi..."
+                           class="w-full border p-4 rounded-2xl outline-none focus:ring-2 ring-blue-500 bg-white">
+                </div>
+                <button onclick="toggleKebCategoryModal()" class="flex items-center justify-center gap-2 border p-4 rounded-2xl bg-white font-bold text-slate-600 hover:border-blue-500 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                    </svg>
+                    <span id="currentKebCatText">Semua Kategori</span>
+                </button>
+                <select id="sortKebutuhan" onchange="filterKebutuhanPublic()" class="border p-4 rounded-2xl outline-none bg-white font-bold text-slate-600 cursor-pointer">
+                    <option value="terbaru">Terbaru</option>
+                    <option value="budget_tertinggi">Budget Tertinggi</option>
+                    <option value="budget_terendah">Budget Terendah</option>
+                </select>
+            </div>
+            <div id="mktKebutuhanList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <p class="text-slate-400 italic col-span-3 text-center py-10">Memuat postingan kebutuhan...</p>
+            </div>
+        </div>
+
     </section>
 
     <section id="dashboard" class="page-section p-6 max-w-7xl mx-auto">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
-            <h2 class="text-3xl font-extrabold text-slate-900">Mitra Center</h2>
-            <p class="text-slate-500">Kelola jasa dan pantau pesanan tetangga Anda.</p>
+            <h2 class="text-3xl font-extrabold text-slate-900">Dashboard</h2>
+            <p id="dashRoleDesc" class="text-slate-500">Kelola jasa dan pantau aktivitas Anda.</p>
         </div>
-        <div class="flex gap-3 items-center">
-            <!-- Kartu profil mitra ringkas -->
+        <div class="flex gap-3 items-center flex-wrap">
+            <!-- Toggle Peran -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-1 flex gap-1 shadow-sm">
+                <button id="btnRolePenyedia" onclick="switchRole('penjasa')"
+                    class="px-4 py-2 rounded-xl text-xs font-bold transition bg-blue-600 text-white shadow">
+                    Penyedia Jasa
+                </button>
+                <button id="btnRolePencari" onclick="switchRole('pelanggan')"
+                    class="px-4 py-2 rounded-xl text-xs font-bold transition text-slate-500 hover:bg-slate-50">
+                    Butuh Jasa
+                </button>
+            </div>
+            <!-- Kartu profil ringkas -->
             <button onclick="toggleProfileModal()"
                     class="flex items-center gap-3 bg-white border border-blue-100 px-4 py-2.5 rounded-2xl shadow-sm hover:shadow-md hover:border-blue-300 transition">
                 <img id="dashAvatarImg"
-                     src="https://ui-avatars.com/api/?name=M&background=dbeafe&color=2563eb&bold=true&size=64"
+                     src="https://ui-avatars.com/api/?name=U&background=dbeafe&color=2563eb&bold=true&size=64"
                      class="w-9 h-9 rounded-xl object-cover border-2 border-blue-200">
                 <div class="text-left">
-                    <p id="dashUsernameText" class="text-sm font-extrabold text-slate-800">Mitra</p>
+                    <p id="dashUsernameText" class="text-sm font-extrabold text-slate-800">Akun Saya</p>
                     <p class="text-[10px] text-blue-500 font-bold">Pengaturan Akun</p>
                 </div>
             </button>
@@ -308,14 +361,15 @@
                     <p class="text-[10px] font-bold text-green-600 uppercase">Status Toko</p>
                     <div class="flex items-center gap-2">
                         <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse" id="statusTokoDot"></span>
-                        <span class="font-bold text-sm text-green-700" id="statusTokoLabel">● Buka</span>
+                        <span class="font-bold text-sm text-green-700" id="statusTokoLabel"> Buka</span>
                     </div>
                 </div>
             </button>
         </div>
     </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <!-- Stat cards: hanya tampil saat mode Penyedia Jasa -->
+    <div id="dashPenyediaStats" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
             <p class="text-slate-400 text-xs font-bold mb-1">Total Pesanan</p>
             <h3 id="statTotalOrder" class="text-2xl font-black text-slate-800">0</h3>
@@ -335,7 +389,28 @@
         </button>
     </div>
 
-    <!-- Tab dashboard -->
+    <!-- Stat cards: hanya tampil saat mode Butuh Jasa -->
+    <div id="dashPencariStats" class="hidden mb-8">
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                <p class="text-slate-400 text-xs font-bold mb-1">Total Postingan</p>
+                <h3 id="statTotalPostingan" class="text-2xl font-black text-slate-800">0</h3>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                <p class="text-slate-400 text-xs font-bold mb-1">Postingan Aktif</p>
+                <h3 id="statPostinganAktif" class="text-2xl font-black text-blue-600">0</h3>
+            </div>
+            <button onclick="togglePengeluaran()"
+                class="bg-gradient-to-br from-purple-500 to-purple-600 p-5 rounded-2xl text-white text-left shadow-md hover:shadow-lg transition">
+                <p class="text-purple-100 text-xs font-bold mb-1">Pengeluaran</p>
+                <p class="text-sm font-black">Lihat Riwayat</p>
+            </button>
+        </div>
+    </div>
+
+    <!-- Panel peran Penyedia Jasa -->
+    <div id="panelPenyedia">
+    <!-- Tab dashboard - Penyedia -->
     <div class="flex gap-2 mb-6 flex-wrap">
         <button onclick="showDashTab('pesanan')" id="tabPesanan" class="px-4 py-2 rounded-xl text-sm font-bold bg-blue-600 text-white transition flex items-center gap-1.5">
             Pesanan Masuk
@@ -344,6 +419,194 @@
         <button onclick="showDashTab('katalog')" id="tabKatalog" class="px-4 py-2 rounded-xl text-sm font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition">Katalog Jasa</button>
         <button onclick="showDashTab('keuangan')" id="tabKeuangan" class="px-4 py-2 rounded-xl text-sm font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition">Keuangan</button>
         <button onclick="showDashTab('reviewer')" id="tabReviewer" class="px-4 py-2 rounded-xl text-sm font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition">Reviewer</button>
+        <button onclick="showDashTab('riwayatJasa')" id="tabRiwayatJasa"
+            class="px-4 py-2 rounded-xl text-sm font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition flex items-center gap-1.5">
+            Riwayat Jasa
+            <span id="riwayatJasaBadge" class="bg-blue-500 text-white text-[10px] px-1.5 py-0.5 rounded-full hidden">0</span>
+        </button>
+    </div>
+    </div><!-- end panelPenyedia -->
+
+    <!-- Panel Riwayat Jasa (penyedia yang sudah apply) -->
+    <div id="dashRiwayatJasa" class="hidden mb-6">
+        <div class="flex items-center justify-between mb-5">
+            <div>
+                <h3 class="text-xl font-bold text-slate-800">Riwayat Jasa</h3>
+                <p class="text-sm text-slate-400 mt-0.5">Semua proyek yang pernah kamu apply — pantau status dan selesaikan pekerjaan</p>
+            </div>
+            <!-- Filter status -->
+            <select id="riwayatJasaFilter" onchange="loadRiwayatJasa()" class="border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold outline-none bg-white text-slate-600">
+                <option value="semua">Semua Status</option>
+                <option value="pending">Menunggu</option>
+                <option value="diterima">Diterima</option>
+                <option value="selesai">Selesai</option>
+                <option value="ditolak">Ditolak</option>
+            </select>
+        </div>
+        <div id="riwayatJasaList" class="space-y-4">
+            <p class="text-slate-400 italic text-center py-8">Memuat riwayat...</p>
+        </div>
+    </div>
+
+    <!-- Panel peran Pencari Kebutuhan -->
+    <div id="panelPencari" class="hidden">
+
+        <!-- Panel Pengeluaran (tersembunyi by default) -->
+        <div id="dashPengeluaran" class="hidden mb-6">
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                        Riwayat Pengeluaran
+                    </h3>
+                    <button onclick="togglePengeluaran()" class="text-slate-400 hover:text-slate-600 text-sm font-bold transition">Tutup</button>
+                </div>
+                <div id="pengeluaranContainer">
+                    <p class="text-slate-400 italic text-center py-4">Memuat data pengeluaran...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Pencari: Postingan Saya | Riwayat Apply | Riwayat Pesanan | Wishlist -->
+        <div class="flex gap-2 mb-6 border-b border-slate-100 pb-4 flex-wrap">
+            <button id="pencariTabPostingan" onclick="showPencariTab('postingan')"
+                class="px-4 py-2 rounded-xl text-sm font-bold bg-blue-600 text-white transition">
+               Postingan Saya
+            </button>
+            <button id="pencariTabRiwayat" onclick="showPencariTab('riwayat')"
+                class="px-4 py-2 rounded-xl text-sm font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition flex items-center gap-1.5">
+                Lamaran Masuk
+                <span id="lamaranBadge" class="hidden bg-red-500 text-white text-[9px] px-1.5 py-0.5 rounded-full">0</span>
+            </button>
+            <button id="pencariTabOrders" onclick="showPencariTab('orders')"
+                class="px-4 py-2 rounded-xl text-sm font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition">
+                Riwayat Pesanan
+            </button>
+            <button id="pencariTabWishlist" onclick="showPencariTab('wishlist')"
+                class="px-4 py-2 rounded-xl text-sm font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition">
+                Wishlist
+            </button>
+        </div>
+
+        <!-- Sub-panel: Postingan Kebutuhan Saya -->
+        <div id="subPanelPostingan">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h3 class="text-xl font-bold text-slate-800">Postingan Kebutuhan Saya</h3>
+                    <p class="text-sm text-slate-400 mt-0.5">Buat postingan, penyedia jasa akan menemukan dan apply ke kamu</p>
+                </div>
+                <button onclick="toggleFormKebutuhan()" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-bold text-sm transition shadow-md">
+                    <span id="btnFormKebutuhanIcon">+</span>
+                    <span id="btnFormKebutuhanLabel">Buat Postingan</span>
+                </button>
+            </div>
+
+            <!-- Form Buat Postingan Kebutuhan -->
+            <div id="formKebutuhanWrapper" class="hidden mb-6">
+                <div class="bg-white rounded-2xl border border-blue-100 shadow-sm p-6 space-y-4">
+                    <h4 class="font-bold text-slate-800">Detail Kebutuhan</h4>
+                    <input id="kbJudul" placeholder="Judul kebutuhan (contoh: Butuh tukang cat rumah)" class="w-full border p-4 rounded-xl outline-none focus:ring-2 focus:ring-blue-100 text-sm">
+                    <select id="kbKategori" class="w-full border p-4 rounded-xl outline-none bg-white font-semibold text-slate-600 text-sm">
+                        <option value="" disabled selected>Pilih Kategori</option>
+                        <option value="Elektronik">Elektronik</option>
+                        <option value="Transportasi">Transportasi</option>
+                        <option value="Pertukangan">Pertukangan</option>
+                        <option value="Kebersihan">Kebersihan</option>
+                        <option value="Kuliner">Kuliner</option>
+                        <option value="Edukasi">Edukasi</option>
+                        <option value="Kesehatan">Kesehatan</option>
+                        <option value="Kecantikan">Kecantikan</option>
+                        <option value="Hewan">Hewan</option>
+                        <option value="Fotografi">Fotografi</option>
+                        <option value="Event">Event</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                    <div class="grid grid-cols-2 gap-3">
+                        <input id="kbBudget" type="number" placeholder="Budget (Rp, opsional)" class="w-full border p-4 rounded-xl outline-none focus:ring-2 focus:ring-blue-100 text-sm">
+                        <input id="kbLokasi" placeholder="Lokasi / area" class="w-full border p-4 rounded-xl outline-none focus:ring-2 focus:ring-blue-100 text-sm">
+                    </div>
+                    <textarea id="kbDeskripsi" rows="3" placeholder="Jelaskan kebutuhan kamu secara detail..." class="w-full border p-4 rounded-xl outline-none focus:ring-2 focus:ring-blue-100 text-sm resize-none"></textarea>
+                    <div class="flex gap-2">
+                        <button onclick="submitKebutuhan()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold text-sm transition shadow">Posting Kebutuhan</button>
+                        <button onclick="toggleFormKebutuhan()" class="px-5 py-3 text-slate-400 hover:text-slate-600 text-sm transition">Batal</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daftar postingan milik user ini -->
+            <div id="myKebutuhanList" class="space-y-4">
+                <p class="text-slate-400 italic text-center py-8">Belum ada postingan kebutuhan.</p>
+            </div>
+        </div>
+
+        <!-- Sub-panel: Lamaran Masuk -->
+        <div id="subPanelRiwayatApply" class="hidden">
+            <div class="mb-4">
+                <h3 class="text-xl font-bold text-slate-800">Lamaran Masuk</h3>
+                <p class="text-sm text-slate-400 mt-0.5">Penyedia jasa yang apply ke postingan kebutuhanmu — terima atau tolak mereka</p>
+            </div>
+            <div id="riwayatApplyList" class="space-y-4">
+                <p class="text-slate-400 italic text-center py-8">Memuat lamaran...</p>
+            </div>
+        </div>
+
+        <!-- Sub-panel: Riwayat Pesanan -->
+        <div id="subPanelOrders" class="hidden">
+            <div class="mb-5">
+                <h3 class="text-xl font-bold text-slate-800">Riwayat Pesanan</h3>
+                <p class="text-sm text-slate-400 mt-0.5">Semua pesanan yang pernah kamu buat</p>
+            </div>
+            <!-- Stats ringkas pesanan -->
+            <div id="orderStatsBox" class="mb-5 hidden">
+                <div class="grid grid-cols-3 gap-3 mb-4">
+                    <div class="bg-blue-600 text-white rounded-2xl p-4 text-center">
+                        <p class="text-2xl font-black" id="statHari">0</p>
+                        <p class="text-xs font-bold text-blue-100 mt-1">Hari Ini</p>
+                    </div>
+                    <div class="bg-indigo-600 text-white rounded-2xl p-4 text-center">
+                        <p class="text-2xl font-black" id="statMinggu">0</p>
+                        <p class="text-xs font-bold text-indigo-100 mt-1">Minggu Ini</p>
+                    </div>
+                    <div class="bg-violet-600 text-white rounded-2xl p-4 text-center">
+                        <p class="text-2xl font-black" id="statBulan">0</p>
+                        <p class="text-xs font-bold text-violet-100 mt-1">Bulan Ini</p>
+                    </div>
+                </div>
+                <div class="flex gap-2 flex-wrap mb-3">
+                    <button onclick="filterOrdersByPeriod('semua')" id="filterSemua"
+                        class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-white transition">Semua</button>
+                    <button onclick="filterOrdersByPeriod('hari')" id="filterHari"
+                        class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition">Hari Ini</button>
+                    <button onclick="filterOrdersByPeriod('minggu')" id="filterMinggu"
+                        class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition">Minggu Ini</button>
+                    <button onclick="filterOrdersByPeriod('bulan')" id="filterBulan"
+                        class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition">Bulan Ini</button>
+                </div>
+                <div class="flex gap-2 flex-wrap">
+                    <button onclick="filterOrdersByStatus('semua')" id="fsSemua"
+                        class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-white transition">Semua Status</button>
+                    <button onclick="filterOrdersByStatus('selesai')" id="fsSelesai"
+                        class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-green-600 border border-green-200 hover:bg-green-50 transition">Selesai</button>
+                    <button onclick="filterOrdersByStatus('pending')" id="fsPending"
+                        class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-yellow-600 border border-yellow-200 hover:bg-yellow-50 transition">Pending</button>
+                    <button onclick="filterOrdersByStatus('diterima')" id="fsDiterima"
+                        class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-blue-600 border border-blue-200 hover:bg-blue-50 transition">Diterima</button>
+                    <button onclick="filterOrdersByStatus('ditolak')" id="fsDitolak"
+                        class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-red-500 border border-red-200 hover:bg-red-50 transition">Ditolak</button>
+                </div>
+            </div>
+            <div id="orderList" class="space-y-4">
+                <p class="text-slate-400 italic text-center">Memuat riwayat...</p>
+            </div>
+        </div>
+
+        <!-- Sub-panel: Wishlist -->
+        <div id="subPanelWishlistDash" class="hidden">
+            <div class="mb-4">
+                <h3 class="text-xl font-bold text-slate-800">Wishlist</h3>
+                <p class="text-sm text-slate-400 mt-0.5">Jasa yang kamu simpan untuk dipesan nanti</p>
+            </div>
+            <div id="wishlistContainer" class="space-y-3"></div>
+        </div>
     </div>
 
     <!-- Panel keuangan (tersembunyi by default) -->
@@ -375,15 +638,15 @@
             <button onclick="setReviewerStarFilter(0)" id="rfs0"
                 class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-white transition">Semua</button>
             <button onclick="setReviewerStarFilter(1)" id="rfs1"
-                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 transition">★ 1</button>
+                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 transition"> 1</button>
             <button onclick="setReviewerStarFilter(2)" id="rfs2"
-                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 transition">★★ 2</button>
+                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 transition"> 2</button>
             <button onclick="setReviewerStarFilter(3)" id="rfs3"
-                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 transition">★★★ 3</button>
+                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 transition"> 3</button>
             <button onclick="setReviewerStarFilter(4)" id="rfs4"
-                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 transition">★★★★ 4</button>
+                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 transition"> 4</button>
             <button onclick="setReviewerStarFilter(5)" id="rfs5"
-                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 transition">★★★★★ 5</button>
+                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 transition"> 5</button>
         </div>
         <div id="reviewerActivityList"></div>
     </div>
@@ -429,18 +692,18 @@
 
                     <select id="pCategory" class="w-full border p-4 rounded-xl outline-none bg-white font-semibold text-slate-600">
                         <option value="" disabled selected>Pilih Kategori Jasa</option>
-                        <option value="Elektronik">⚡ Elektronik</option>
-                        <option value="Transportasi">🚗 Transportasi & Supir</option>
-                        <option value="Pertukangan">🔧 Pertukangan & Renovasi</option>
-                        <option value="Kebersihan">🧹 Kebersihan</option>
-                        <option value="Kuliner">🍱 Kuliner & Katering</option>
-                        <option value="Edukasi">📚 Edukasi & Les</option>
-                        <option value="Kesehatan">❤️ Kesehatan</option>
-                        <option value="Kecantikan">✨ Kecantikan & Perawatan</option>
-                        <option value="Hewan">🐾 Penitipan Hewan</option>
-                        <option value="Fotografi">📷 Fotografi & Video</option>
-                        <option value="Event">🎉 Event & Dekorasi</option>
-                        <option value="Lainnya">📦 Lainnya</option>
+                        <option value="Elektronik">Elektronik</option>
+                        <option value="Transportasi">Transportasi & Supir</option>
+                        <option value="Pertukangan">Pertukangan & Renovasi</option>
+                        <option value="Kebersihan">Kebersihan</option>
+                        <option value="Kuliner">Kuliner & Katering</option>
+                        <option value="Edukasi">Edukasi & Les</option>
+                        <option value="Kesehatan">Kesehatan</option>
+                        <option value="Kecantikan">Kecantikan & Perawatan</option>
+                        <option value="Hewan">Penitipan Hewan</option>
+                        <option value="Fotografi">Fotografi & Video</option>
+                        <option value="Event">Event & Dekorasi</option>
+                        <option value="Lainnya">Lainnya</option>
                     </select>
 
                     <input id="pPrice" type="number" placeholder="Harga (Contoh: 50000)" class="w-full border p-4 rounded-xl outline-none focus:ring-2 focus:ring-blue-100">
@@ -459,7 +722,7 @@
                         Pasang Jasa Sekarang
                     </button>
                     <button onclick="resetFormJasa()" class="w-full text-slate-400 text-sm py-2 hover:text-slate-600 transition">
-                        ✕ Batal / Reset Form
+                         Batal / Reset Form
                     </button>
 
                     <!-- Tombol Perbarui Lokasi Semua Jasa -->
@@ -470,7 +733,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                             </svg>
-                            📍 Perbarui Lokasi Semua Jasa
+                            Perbarui Lokasi Semua Jasa
                         </button>
                         <p class="text-[10px] text-slate-400 text-center mt-1">Gunakan GPS saat ini untuk update koordinat jasa kamu</p>
                     </div>
@@ -480,68 +743,11 @@
     </div>
 </section>
 
-<section id="orders" class="page-section p-6 max-w-4xl mx-auto text-left border-t mt-10">
-    <div class="flex gap-3 mb-4 border-b pb-4">
-        <button onclick="showOrderTab('riwayat')" id="tabRiwayat" class="px-4 py-2 rounded-xl text-sm font-bold bg-blue-600 text-white">Riwayat Pesanan</button>
-        <button onclick="showOrderTab('wishlist')" id="tabWishlist" class="px-4 py-2 rounded-xl text-sm font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition">Wishlist</button>
-    </div>
 
-    <!-- Stats ringkas pesanan -->
-    <div id="orderStatsBox" class="mb-5 hidden">
-        <!-- Stat cards -->
-        <div class="grid grid-cols-3 gap-3 mb-4">
-            <div class="bg-blue-600 text-white rounded-2xl p-4 text-center">
-                <p class="text-2xl font-black" id="statHari">0</p>
-                <p class="text-xs font-bold text-blue-100 mt-1">Hari Ini</p>
-            </div>
-            <div class="bg-indigo-600 text-white rounded-2xl p-4 text-center">
-                <p class="text-2xl font-black" id="statMinggu">0</p>
-                <p class="text-xs font-bold text-indigo-100 mt-1">Minggu Ini</p>
-            </div>
-            <div class="bg-violet-600 text-white rounded-2xl p-4 text-center">
-                <p class="text-2xl font-black" id="statBulan">0</p>
-                <p class="text-xs font-bold text-violet-100 mt-1">Bulan Ini</p>
-            </div>
-        </div>
-        <!-- Filter periode -->
-        <div class="flex gap-2 flex-wrap mb-3">
-            <button onclick="filterOrdersByPeriod('semua')" id="filterSemua"
-                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-white transition">Semua</button>
-            <button onclick="filterOrdersByPeriod('hari')" id="filterHari"
-                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition">Hari Ini</button>
-            <button onclick="filterOrdersByPeriod('minggu')" id="filterMinggu"
-                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition">Minggu Ini</button>
-            <button onclick="filterOrdersByPeriod('bulan')" id="filterBulan"
-                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition">Bulan Ini</button>
-        </div>
-        <!-- Filter status -->
-        <div class="flex gap-2 flex-wrap">
-            <button onclick="filterOrdersByStatus('semua')" id="fsSemua"
-                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-white transition">Semua Status</button>
-            <button onclick="filterOrdersByStatus('selesai')" id="fsSelesai"
-                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-green-600 border border-green-200 hover:bg-green-50 transition">Selesai</button>
-            <button onclick="filterOrdersByStatus('pending')" id="fsPending"
-                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-yellow-600 border border-yellow-200 hover:bg-yellow-50 transition">Pending</button>
-            <button onclick="filterOrdersByStatus('diterima')" id="fsDiterima"
-                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-blue-600 border border-blue-200 hover:bg-blue-50 transition">Diterima</button>
-            <button onclick="filterOrdersByStatus('ditolak')" id="fsDitolak"
-                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-red-500 border border-red-200 hover:bg-red-50 transition">Ditolak</button>
-        </div>
-    </div>
-
-    <div id="panelRiwayat">
-        <div id="orderList" class="space-y-4">
-            <p class="text-slate-400 italic text-center">Memuat riwayat...</p>
-        </div>
-    </div>
-    <div id="panelWishlist" class="hidden">
-        <div id="wishlistContainer" class="space-y-3"></div>
-    </div>
-</section>
 
     <div id="detailModal" class="fixed inset-0 hidden bg-black/60 z-[100] flex items-center justify-center p-6 backdrop-blur-sm">
     <div class="bg-white max-w-4xl w-full rounded-[2.5rem] overflow-hidden shadow-2xl relative max-h-[90vh] overflow-y-auto">
-        <button onclick="closeModal()" class="absolute top-6 right-6 bg-white rounded-full w-10 h-10 flex items-center justify-center font-bold shadow-md z-10">✕</button>
+        <button onclick="closeModal()" class="absolute top-6 right-6 bg-white rounded-full w-10 h-10 flex items-center justify-center font-bold shadow-md z-10"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg></button>
         <div class="flex flex-col md:flex-row text-left">
             <img id="modalImg" class="w-full md:w-1/2 h-80 md:h-auto object-cover">
             <div class="p-8 md:p-10 flex flex-col justify-between w-full">
@@ -553,7 +759,7 @@
 
                     <!-- PROFIL PENJASA -->
                     <div id="modalPenjasaCard" class="hidden mb-5 p-4 bg-gradient-to-r from-blue-50 to-slate-50 rounded-2xl border border-blue-100">
-                        <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-3">👤 Tentang Penyedia Jasa</p>
+                        <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-3">Tentang Penyedia Jasa</p>
                         <div class="flex items-center gap-3">
                             <img id="modalPenjasaAvatar"
                                 src="https://ui-avatars.com/api/?name=M&background=dbeafe&color=2563eb&bold=true&size=64"
@@ -591,11 +797,11 @@
                         <div id="ratingInputArea" class="hidden">
                             <p class="text-xs text-slate-500 mb-2 font-medium">Nilai jasa ini:</p>
                             <div class="flex gap-1" id="starInput">
-                                <button onclick="setRating(1)" class="star-btn text-2xl text-slate-300 hover:text-yellow-400 transition">★</button>
-                                <button onclick="setRating(2)" class="star-btn text-2xl text-slate-300 hover:text-yellow-400 transition">★</button>
-                                <button onclick="setRating(3)" class="star-btn text-2xl text-slate-300 hover:text-yellow-400 transition">★</button>
-                                <button onclick="setRating(4)" class="star-btn text-2xl text-slate-300 hover:text-yellow-400 transition">★</button>
-                                <button onclick="setRating(5)" class="star-btn text-2xl text-slate-300 hover:text-yellow-400 transition">★</button>
+                                <button onclick="setRating(1)" class="star-btn text-2xl text-slate-300 hover:text-yellow-400 transition"></button>
+                                <button onclick="setRating(2)" class="star-btn text-2xl text-slate-300 hover:text-yellow-400 transition"></button>
+                                <button onclick="setRating(3)" class="star-btn text-2xl text-slate-300 hover:text-yellow-400 transition"></button>
+                                <button onclick="setRating(4)" class="star-btn text-2xl text-slate-300 hover:text-yellow-400 transition"></button>
+                                <button onclick="setRating(5)" class="star-btn text-2xl text-slate-300 hover:text-yellow-400 transition"></button>
                             </div>
                             <p id="ratingMsg" class="text-xs text-slate-400 mt-1 italic"></p>
                         </div>
@@ -611,7 +817,7 @@
                             <!-- Reply bar (muncul saat klik Balas) -->
                             <div id="commentReplyBar" style="display:none;align-items:center;justify-content:space-between;background:#eff6ff;border-radius:10px;padding:6px 12px;margin-bottom:6px;">
                                 <p id="commentReplyLabel" style="font-size:11px;font-weight:700;color:#2563eb;margin:0;">Membalas @seseorang</p>
-                                <button onclick="batalBalasKomentar()" style="background:none;border:none;cursor:pointer;color:#94a3b8;font-size:14px;padding:0;">✕</button>
+                                <button onclick="batalBalasKomentar()" style="background:none;border:none;cursor:pointer;color:#94a3b8;font-size:14px;padding:0;"></button>
                             </div>
                             <div class="flex gap-2">
                                 <input type="text" id="commentText" placeholder="Tulis komentar..." class="flex-1 border border-slate-200 p-3 rounded-xl text-sm outline-none focus:ring-2 ring-blue-500">
@@ -629,7 +835,7 @@
                     </button>
                     <button id="btnOrderNow"
                         class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-bold text-base shadow-lg transition flex items-center justify-center gap-2">
-                        📋 Booking Sekarang
+                         Booking Sekarang
                     </button>
                 </div>
             </div>
@@ -637,11 +843,11 @@
     </div>
 </div>
 
-    <!-- ═══════ HALAMAN CHAT ═══════ -->
-<!-- ═══ CHAT PAGE: Mobile = 1 panel, Desktop = 2 panel ═══ -->
+    <!--  HALAMAN CHAT  -->
+<!--  CHAT PAGE: Mobile = 1 panel, Desktop = 2 panel  -->
 <section id="chatPage" class="page-section" style="height:100vh;display:none;flex-direction:column;padding:0;max-width:100%;">
 
-    <!-- ══ PANEL KIRI: Daftar Chat ══ -->
+    <!--  PANEL KIRI: Daftar Chat  -->
     <div id="chatListPanel" style="display:flex;flex-direction:column;height:100%;background:#f8fafc;">
         <!-- Header list -->
         <div style="background:white;padding:16px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:12px;">
@@ -661,7 +867,7 @@
         </div>
     </div>
 
-    <!-- ══ PANEL KANAN: Area Chat (fullscreen di mobile) ══ -->
+    <!--  PANEL KANAN: Area Chat (fullscreen di mobile)  -->
     <div id="chatArea" style="display:none;flex-direction:column;height:100%;background:#f8fafc;">
         <!-- Header chat -->
         <div id="chatHeader" style="background:white;padding:12px 16px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:12px;">
@@ -701,7 +907,7 @@
                             <p id="replyPreviewText" style="font-size:12px;color:#475569;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></p>
                         </div>
                     </div>
-                    <button onclick="batalReply()" style="background:none;border:none;cursor:pointer;font-size:18px;color:#94a3b8;flex-shrink:0;padding:2px;">✕</button>
+                    <button onclick="batalReply()" style="background:none;border:none;cursor:pointer;font-size:18px;color:#94a3b8;flex-shrink:0;padding:2px;"></button>
                 </div>
             </div>
             <div style="padding:12px 16px;display:flex;gap:8px;align-items:center;">
@@ -773,10 +979,6 @@
                         </svg>
                     </button>
                 </div>
-                <select id="regRole" class="w-full border p-4 rounded-xl outline-none bg-white">
-                    <option value="pelanggan">Saya ingin Mencari Jasa</option>
-                    <option value="penjasa">Saya ingin Buat Mitra Jasa</option>
-                </select>
                 <button onclick="handleRegister()" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-800 transition">Daftar</button>
                 <p class="text-center text-sm text-slate-500">Sudah punya akun? <button onclick="showPage('loginPage')" class="text-blue-600 font-bold underline">Login</button></p>
             </div>
@@ -788,26 +990,54 @@
     <div class="bg-white w-full md:max-w-lg rounded-t-[2.5rem] md:rounded-[2.5rem] p-8 shadow-2xl animate-slide-up">
         <div class="flex justify-between items-center mb-6">
             <h3 class="text-xl font-extrabold text-slate-800">Pilih Kategori</h3>
-            <button onclick="toggleCategoryModal()" class="text-slate-400 text-xl font-bold p-2">✕</button>
+            <button onclick="toggleCategoryModal()" class="text-slate-400 text-xl font-bold p-2"></button>
         </div>
 
         <div class="flex flex-wrap gap-3 mb-8">
             <button onclick="selectCategory('semua')" class="cat-pill active">Semua</button>
-            <button onclick="selectCategory('Elektronik')" class="cat-pill">⚡ Elektronik</button>
-            <button onclick="selectCategory('Transportasi')" class="cat-pill">🚗 Transportasi</button>
-            <button onclick="selectCategory('Pertukangan')" class="cat-pill">🔧 Tukang</button>
-            <button onclick="selectCategory('Kebersihan')" class="cat-pill">🧹 Kebersihan</button>
-            <button onclick="selectCategory('Kuliner')" class="cat-pill">🍱 Kuliner</button>
-            <button onclick="selectCategory('Edukasi')" class="cat-pill">📚 Edukasi</button>
-            <button onclick="selectCategory('Kesehatan')" class="cat-pill">❤️ Kesehatan</button>
-            <button onclick="selectCategory('Kecantikan')" class="cat-pill">✨ Kecantikan</button>
-            <button onclick="selectCategory('Hewan')" class="cat-pill">🐾 Hewan</button>
-            <button onclick="selectCategory('Fotografi')" class="cat-pill">📷 Foto & Video</button>
-            <button onclick="selectCategory('Event')" class="cat-pill">🎉 Event</button>
-            <button onclick="selectCategory('Lainnya')" class="cat-pill">📦 Lainnya</button>
+            <button onclick="selectCategory('Elektronik')" class="cat-pill"> Elektronik</button>
+            <button onclick="selectCategory('Transportasi')" class="cat-pill"> Transportasi</button>
+            <button onclick="selectCategory('Pertukangan')" class="cat-pill"> Tukang</button>
+            <button onclick="selectCategory('Kebersihan')" class="cat-pill"> Kebersihan</button>
+            <button onclick="selectCategory('Kuliner')" class="cat-pill"> Kuliner</button>
+            <button onclick="selectCategory('Edukasi')" class="cat-pill"> Edukasi</button>
+            <button onclick="selectCategory('Kesehatan')" class="cat-pill"> Kesehatan</button>
+            <button onclick="selectCategory('Kecantikan')" class="cat-pill"> Kecantikan</button>
+            <button onclick="selectCategory('Hewan')" class="cat-pill"> Hewan</button>
+            <button onclick="selectCategory('Fotografi')" class="cat-pill"> Foto & Video</button>
+            <button onclick="selectCategory('Event')" class="cat-pill"> Event</button>
+            <button onclick="selectCategory('Lainnya')" class="cat-pill"> Lainnya</button>
         </div>
 
         <button onclick="toggleCategoryModal()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-blue-700 transition">
+            Tampilkan Hasil
+        </button>
+    </div>
+</div>
+
+<!-- Modal Kategori Kebutuhan (Butuh Jasa tab) -->
+<div id="kebCategoryModal" class="fixed inset-0 hidden bg-black/60 z-[110] flex items-end md:items-center justify-center backdrop-blur-sm p-0 md:p-6">
+    <div class="bg-white w-full md:max-w-lg rounded-t-[2.5rem] md:rounded-[2.5rem] p-8 shadow-2xl animate-slide-up">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-extrabold text-slate-800">Kategori Kebutuhan</h3>
+            <button onclick="toggleKebCategoryModal()" class="text-slate-400 text-xl font-bold p-2"></button>
+        </div>
+        <div class="flex flex-wrap gap-3 mb-8">
+            <button onclick="selectKebCategory('semua')" class="cat-pill active" id="kebPill-semua">Semua</button>
+            <button onclick="selectKebCategory('Elektronik')" class="cat-pill" id="kebPill-Elektronik"> Elektronik</button>
+            <button onclick="selectKebCategory('Transportasi')" class="cat-pill" id="kebPill-Transportasi"> Transportasi</button>
+            <button onclick="selectKebCategory('Pertukangan')" class="cat-pill" id="kebPill-Pertukangan"> Tukang</button>
+            <button onclick="selectKebCategory('Kebersihan')" class="cat-pill" id="kebPill-Kebersihan"> Kebersihan</button>
+            <button onclick="selectKebCategory('Kuliner')" class="cat-pill" id="kebPill-Kuliner"> Kuliner</button>
+            <button onclick="selectKebCategory('Edukasi')" class="cat-pill" id="kebPill-Edukasi"> Edukasi</button>
+            <button onclick="selectKebCategory('Kesehatan')" class="cat-pill" id="kebPill-Kesehatan"> Kesehatan</button>
+            <button onclick="selectKebCategory('Kecantikan')" class="cat-pill" id="kebPill-Kecantikan"> Kecantikan</button>
+            <button onclick="selectKebCategory('Hewan')" class="cat-pill" id="kebPill-Hewan"> Hewan</button>
+            <button onclick="selectKebCategory('Fotografi')" class="cat-pill" id="kebPill-Fotografi"> Foto & Video</button>
+            <button onclick="selectKebCategory('Event')" class="cat-pill" id="kebPill-Event"> Event</button>
+            <button onclick="selectKebCategory('Lainnya')" class="cat-pill" id="kebPill-Lainnya"> Lainnya</button>
+        </div>
+        <button onclick="toggleKebCategoryModal()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-blue-700 transition">
             Tampilkan Hasil
         </button>
     </div>
@@ -821,7 +1051,7 @@
         <div class="p-6 border-b border-slate-100 flex justify-between items-center shrink-0">
             <div>
                 <h3 class="font-extrabold text-xl text-slate-800">Profil Saya</h3>
-                <p id="profileRoleBadge" class="text-xs font-bold text-blue-500 mt-0.5"></p>
+                <p class="text-xs font-bold text-blue-500 mt-0.5">Pengguna WargaBantuWarga</p>
             </div>
             <button onclick="toggleProfileModal()" class="w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 text-xl transition">&times;</button>
         </div>
@@ -887,29 +1117,6 @@
                 </div>
             </div>
 
-            <!-- BADGE LEVEL (khusus pelanggan) -->
-            <div id="badgeLevelSection" class="hidden">
-                <label class="block text-sm font-bold text-slate-700 mb-2">Level Kamu</label>
-                <div id="badgeLevelCard" class="flex items-center gap-4 p-4 rounded-2xl border-2" style="background:#1e293b;border-color:#334155;">
-                    <div id="badgeLevelIcon" style="font-size:36px;flex-shrink:0;">🌱</div>
-                    <div style="flex:1;min-width:0;">
-                        <p id="badgeLevelName" style="font-weight:800;font-size:16px;margin:0;color:#e2e8f0;">Pendatang Baru</p>
-                        <p id="badgeLevelDesc" style="font-size:11px;color:#94a3b8;margin:4px 0 8px;"></p>
-                        <div id="badgeLevelBarWrap" style="height:8px;border-radius:999px;background:#334155;overflow:hidden;width:100%;">
-                            <div id="badgeLevelBar" style="height:100%;width:0%;border-radius:999px;background:#64748b;transition:width 0.6s ease;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- RIWAYAT REVIEW (khusus pelanggan) -->
-            <div id="reviewHistorySection" class="hidden">
-                <label class="block text-sm font-bold text-slate-700 mb-2">Jasa yang Pernah Kamu Nilai</label>
-                <div id="reviewHistoryList" class="space-y-2 max-h-48 overflow-y-auto pr-1">
-                    <p class="text-xs text-slate-400 italic text-center py-4">Memuat...</p>
-                </div>
-            </div>
-
             <!-- INFO AKUN (read-only) -->
             <div class="bg-slate-50 rounded-2xl p-4 space-y-2 border border-slate-100">
                 <!-- Email editable -->
@@ -917,7 +1124,7 @@
                     <div class="flex justify-between items-center mb-1">
                         <span class="text-xs font-bold text-slate-500">Email</span>
                         <button onclick="toggleEditEmail()" id="btnEditEmail"
-                            class="text-[10px] font-bold text-blue-500 hover:text-blue-700">✏️ Ganti</button>
+                            class="text-[10px] font-bold text-blue-500 hover:text-blue-700"> Ganti</button>
                     </div>
                     <div id="emailViewMode">
                         <span id="profileEmailDisplay" class="text-xs text-slate-700 font-medium"></span>
@@ -940,7 +1147,7 @@
                     <div class="flex justify-between items-center mb-1">
                         <span class="text-xs font-bold text-slate-500">Password</span>
                         <button onclick="toggleEditPassword()" id="btnEditPassword"
-                            class="text-[10px] font-bold text-blue-500 hover:text-blue-700">✏️ Ganti</button>
+                            class="text-[10px] font-bold text-blue-500 hover:text-blue-700"> Ganti</button>
                     </div>
                     <div id="passViewMode">
                         <span class="text-xs text-slate-400">••••••••</span>
@@ -1022,28 +1229,22 @@
             <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 -mt-12 mb-6">
                 <img id="pubAvatar"
                      src="https://ui-avatars.com/api/?name=U&background=dbeafe&color=2563eb&bold=true&size=128"
+                     onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=U&background=dbeafe&color=2563eb&bold=true&size=128'"
                      class="w-24 h-24 rounded-2xl object-cover border-4 border-white shadow-xl">
                 <div id="pubContactBtn"></div>
             </div>
             <div class="flex flex-wrap items-center gap-3 mb-3">
                 <h2 id="pubUsername" class="text-2xl font-extrabold text-slate-900"></h2>
-                <span id="pubRoleBadge" class="text-xs font-bold px-3 py-1 rounded-full"></span>
+                <span class="text-xs font-bold px-3 py-1 rounded-full bg-blue-50 text-blue-600">Pengguna WargaBantuWarga</span>
             </div>
             <p id="pubBio" class="text-slate-500 text-sm leading-relaxed mb-4"></p>
-            <!-- Badge level pelanggan (muncul jika bukan penjasa) -->
-            <div id="pubBadgeSection" class="hidden mb-4">
-                <div id="pubBadgeCard" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-bold">
-                    <span id="pubBadgeIcon" style="font-size:18px;">🌱</span>
-                    <span id="pubBadgeName">Pendatang Baru</span>
-                </div>
-            </div>
             <div id="pubMeta" class="flex flex-wrap gap-4 text-xs text-slate-400 font-medium"></div>
         </div>
     </div>
 
-    <!-- Jasa milik penjasa ini (hanya tampil jika penjasa) -->
+    <!-- Jasa milik user ini (tampil untuk semua yang punya jasa) -->
     <div id="pubJasaSection" class="hidden">
-        <h3 class="text-lg font-extrabold text-slate-800 mb-4">Jasa yang Ditawarkan</h3>
+        <h3 id="pubJasaTitle" class="text-lg font-extrabold text-slate-800 mb-4">Jasa yang Ditawarkan</h3>
         <div id="pubJasaList" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
     </div>
 
@@ -1058,30 +1259,23 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
             </svg>
         </div>
-        <h3 class="text-xl font-extrabold text-slate-800 mb-2">Daftar sebagai apa?</h3>
-        <p class="text-sm text-slate-500 mb-6">Pilih peran Anda di WargaBantuWarga</p>
+        <h3 class="text-xl font-extrabold text-slate-800 mb-2">Selamat Datang!</h3>
+        <p class="text-sm text-slate-500 mb-6">Akun kamu akan segera dibuat di WargaBantuWarga</p>
 
-        <div class="flex flex-col gap-3">
-            <button onclick="confirmGoogleRole('pelanggan')"
-                class="w-full flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition text-left group">
-                <div class="w-12 h-12 bg-blue-100 group-hover:bg-blue-200 rounded-xl flex items-center justify-center text-2xl shrink-0">🛒</div>
-                <div>
-                    <p class="font-bold text-slate-800">Pelanggan</p>
-                    <p class="text-xs text-slate-500">Cari & pesan jasa dari mitra</p>
-                </div>
-            </button>
-
-            <button onclick="confirmGoogleRole('penjasa')"
-                class="w-full flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-200 hover:border-green-400 hover:bg-green-50 transition text-left group">
-                <div class="w-12 h-12 bg-green-100 group-hover:bg-green-200 rounded-xl flex items-center justify-center text-2xl shrink-0">🛠️</div>
-                <div>
-                    <p class="font-bold text-slate-800">Mitra Jasa</p>
-                    <p class="text-xs text-slate-500">Tawarkan jasa & terima pesanan</p>
-                </div>
-            </button>
+        <div class="bg-blue-50 rounded-2xl p-4 mb-6 text-left">
+            <p class="text-sm text-slate-600">Dengan satu akun, kamu bisa:</p>
+            <ul class="mt-2 space-y-1">
+                <li class="text-xs text-slate-500 flex items-center gap-2"><span class="text-blue-500 font-bold"></span> Menawarkan jasa sebagai Penyedia</li>
+                <li class="text-xs text-slate-500 flex items-center gap-2"><span class="text-blue-500 font-bold"></span> Posting kebutuhan sebagai Pencari</li>
+            </ul>
         </div>
 
-        <button onclick="hideGoogleRoleModal()" class="mt-5 text-xs text-slate-400 hover:text-slate-600 transition">
+        <button onclick="confirmGoogleRole('pelanggan')"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-2xl font-bold text-sm transition shadow-lg">
+            Lanjutkan
+        </button>
+
+        <button onclick="hideGoogleRoleModal()" class="mt-3 text-xs text-slate-400 hover:text-slate-600 transition block w-full">
             Batal
         </button>
     </div>
@@ -1122,7 +1316,7 @@
     <div style="background:#1e293b;border-radius:20px;width:100%;max-width:420px;overflow:hidden;">
         <div style="padding:16px 20px;border-bottom:1px solid #334155;display:flex;justify-content:space-between;align-items:center;">
             <p style="font-weight:700;color:white;font-size:15px;margin:0;">Crop Foto Profil</p>
-            <button onclick="batalCrop()" style="background:#334155;border:none;border-radius:50%;width:32px;height:32px;color:white;cursor:pointer;font-size:16px;">✕</button>
+            <button onclick="batalCrop()" style="background:#334155;border:none;border-radius:50%;width:32px;height:32px;color:white;cursor:pointer;font-size:16px;"></button>
         </div>
         <div style="padding:16px;background:#0f172a;">
             <div style="max-height:320px;overflow:hidden;border-radius:12px;">
@@ -1142,7 +1336,7 @@
     <div style="background:white;border-radius:24px 24px 0 0;width:100%;max-width:480px;margin:0 auto;max-height:85vh;display:flex;flex-direction:column;">
         <div style="padding:16px 20px;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;">
             <p style="font-weight:800;font-size:16px;color:#0f172a;margin:0;">Kelola Akun</p>
-            <button onclick="tutupAkunPanel()" style="background:#f1f5f9;border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:16px;">✕</button>
+            <button onclick="tutupAkunPanel()" style="background:#f1f5f9;border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:16px;"></button>
         </div>
         <!-- Daftar akun tersimpan -->
         <div id="akunList" style="flex:1;overflow-y:auto;padding:12px 16px;"></div>
@@ -1175,78 +1369,60 @@
 
     <div class="max-w-lg mx-auto px-6 py-10 space-y-6">
 
-        <!-- Tim Developer -->
+        <!-- Tim Pengembang -->
         <div>
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Tim Developer</p>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Tim Pengembang</p>
             <div class="space-y-3">
 
                 <!-- Joel -->
-                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                    <div class="flex items-center gap-4 mb-4">
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 cursor-pointer hover:border-blue-200 hover:shadow-md transition" onclick="bukaProfilDeveloper('joel')">
+                    <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white font-black text-lg flex-shrink-0">J</div>
-                        <div>
+                        <div class="flex-1 min-w-0">
                             <p class="font-bold text-slate-800 text-sm">Joel Larry Junior Rondonuwu</p>
                             <p class="text-xs text-slate-400">joeljuniorjoel@gmail.com</p>
+                            <p class="text-xs text-blue-500 font-semibold mt-0.5">Lihat profil →</p>
                         </div>
-                    </div>
-                    <div class="flex gap-2">
-                        <a href="https://wa.me/6281110139102?text=Halo%20Joel%2C%20saya%20ingin%20melaporkan%20masalah%20di%20WargaBantuWarga%3A%20"
-                            target="_blank"
-                            class="flex-1 flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white py-2.5 rounded-xl font-bold text-sm transition">
-                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.523 5.845L.057 23.492a.5.5 0 00.623.605l5.806-1.525A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.668-.523-5.186-1.433l-.372-.22-3.844 1.009 1.028-3.75-.242-.386A9.955 9.955 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-                            WhatsApp
-                        </a>
                         <a href="mailto:joeljuniorjoel@gmail.com?subject=Laporan%20Bug%20WargaBantuWarga"
-                            class="flex-1 flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl font-bold text-sm transition">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                            onclick="event.stopPropagation()"
+                            class="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl font-bold text-xs transition flex-shrink-0">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                             Email
                         </a>
                     </div>
                 </div>
 
                 <!-- Rio -->
-                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                    <div class="flex items-center gap-4 mb-4">
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 cursor-pointer hover:border-indigo-200 hover:shadow-md transition" onclick="bukaProfilDeveloper('rio')">
+                    <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center text-white font-black text-lg flex-shrink-0">R</div>
-                        <div>
+                        <div class="flex-1 min-w-0">
                             <p class="font-bold text-slate-800 text-sm">Rio Sadewa</p>
                             <p class="text-xs text-slate-400">sadwwario@gmail.com</p>
+                            <p class="text-xs text-blue-500 font-semibold mt-0.5">Lihat profil →</p>
                         </div>
-                    </div>
-                    <div class="flex gap-2">
-                        <a href="https://wa.me/6285894901373?text=Halo%20Rio%2C%20saya%20ingin%20melaporkan%20masalah%20di%20WargaBantuWarga%3A%20"
-                            target="_blank"
-                            class="flex-1 flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white py-2.5 rounded-xl font-bold text-sm transition">
-                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.523 5.845L.057 23.492a.5.5 0 00.623.605l5.806-1.525A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.668-.523-5.186-1.433l-.372-.22-3.844 1.009 1.028-3.75-.242-.386A9.955 9.955 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-                            WhatsApp
-                        </a>
                         <a href="mailto:sadwwario@gmail.com?subject=Laporan%20Bug%20WargaBantuWarga"
-                            class="flex-1 flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl font-bold text-sm transition">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                            onclick="event.stopPropagation()"
+                            class="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl font-bold text-xs transition flex-shrink-0">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                             Email
                         </a>
                     </div>
                 </div>
 
                 <!-- Raya -->
-                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                    <div class="flex items-center gap-4 mb-4">
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 cursor-pointer hover:border-violet-200 hover:shadow-md transition" onclick="bukaProfilDeveloper('gibran')">
+                    <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-2xl bg-violet-600 flex items-center justify-center text-white font-black text-lg flex-shrink-0">R</div>
-                        <div>
+                        <div class="flex-1 min-w-0">
                             <p class="font-bold text-slate-800 text-sm">Raya Gibran Bachtiar</p>
                             <p class="text-xs text-slate-400">rayagibranbachtiar@gmail.com</p>
+                            <p class="text-xs text-blue-500 font-semibold mt-0.5">Lihat profil →</p>
                         </div>
-                    </div>
-                    <div class="flex gap-2">
-                        <a href="https://wa.me/6281381979923?text=Halo%20Raya%2C%20saya%20ingin%20melaporkan%20masalah%20di%20WargaBantuWarga%3A%20"
-                            target="_blank"
-                            class="flex-1 flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white py-2.5 rounded-xl font-bold text-sm transition">
-                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.523 5.845L.057 23.492a.5.5 0 00.623.605l5.806-1.525A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.668-.523-5.186-1.433l-.372-.22-3.844 1.009 1.028-3.75-.242-.386A9.955 9.955 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-                            WhatsApp
-                        </a>
                         <a href="mailto:rayagibranbachtiar@gmail.com?subject=Laporan%20Bug%20WargaBantuWarga"
-                            class="flex-1 flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl font-bold text-sm transition">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                            onclick="event.stopPropagation()"
+                            class="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl font-bold text-xs transition flex-shrink-0">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                             Email
                         </a>
                     </div>
@@ -1265,15 +1441,168 @@
                     class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-400 text-slate-800">
                 <textarea id="contactMsg" rows="4" placeholder="Deskripsikan masalah atau saran kamu..."
                     class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-400 resize-none text-slate-800"></textarea>
-                <button onclick="kirimLaporan()"
+                <!-- Pilihan Developer -->
+                <div>
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Tujuan Laporan</label>
+                    <select id="contactTarget" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-400 text-slate-700 bg-white">
+                        <option value="joel">Joel Larry Junior Rondonuwu</option>
+                        <option value="rio">Rio Sadewa</option>
+                        <option value="raya">Raya Gibran Bachtiar</option>
+                    </select>
+                </div>
+                <!-- Tombol kirim via Email -->
+                <div class="pt-1">
+                    <button onclick="kirimLaporan('email')"
+                        class="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold text-sm transition">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        Kirim via Email
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== ULASAN PENGGUNA ===== -->
+        <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Ulasan Pengguna</p>
+
+            <!-- Form Ulasan Baru -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 space-y-3 mb-4">
+                <p class="font-bold text-slate-700 text-sm">Bagikan Pendapat Kamu </p>
+
+                <!-- Star Rating -->
+                <div>
+                    <label class="text-xs text-slate-400 font-semibold block mb-1.5">Rating</label>
+                    <div id="starRating" class="flex gap-2">
+                        <button type="button" onclick="setRating(1)" class="star-btn text-3xl text-slate-300 hover:text-yellow-400 transition" data-val="1"></button>
+                        <button type="button" onclick="setRating(2)" class="star-btn text-3xl text-slate-300 hover:text-yellow-400 transition" data-val="2"></button>
+                        <button type="button" onclick="setRating(3)" class="star-btn text-3xl text-slate-300 hover:text-yellow-400 transition" data-val="3"></button>
+                        <button type="button" onclick="setRating(4)" class="star-btn text-3xl text-slate-300 hover:text-yellow-400 transition" data-val="4"></button>
+                        <button type="button" onclick="setRating(5)" class="star-btn text-3xl text-slate-300 hover:text-yellow-400 transition" data-val="5"></button>
+                    </div>
+                    <input type="hidden" id="ulasanRating" value="0">
+                </div>
+                <textarea id="ulasanKomentar" rows="3" placeholder="Ceritakan pengalamanmu menggunakan WargaBantuWarga..."
+                    class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-400 resize-none text-slate-800"></textarea>
+                <button onclick="kirimUlasan()"
                     class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold text-sm transition">
-                    Kirim via WhatsApp
+                    Kirim Ulasan
                 </button>
+            </div>
+
+            <!-- ===== MODAL PILIHAN IDENTITAS ULASAN ===== -->
+            <div id="identitasUlasanModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.45);backdrop-filter:blur(2px);" onclick="tutupIdentitasModal(event)">
+                <div style="position:absolute;bottom:0;left:0;right:0;background:white;border-radius:24px 24px 0 0;padding:24px 20px 0;max-width:480px;margin:0 auto;" onclick="event.stopPropagation()">
+                    <!-- Handle bar -->
+                    <div style="width:40px;height:4px;background:#e2e8f0;border-radius:2px;margin:0 auto 20px;"></div>
+                    <p style="font-weight:800;font-size:16px;color:#0f172a;text-align:center;margin-bottom:6px;">Tampilkan sebagai siapa?</p>
+                    <p style="font-size:12px;color:#94a3b8;text-align:center;margin-bottom:20px;">Pilih bagaimana ulasanmu akan ditampilkan kepada pengguna lain</p>
+
+                    <!-- Opsi 1: Tampilkan Identitas -->
+                    <button onclick="submitUlasanFinal(true)" id="btnPilihIdentitas"
+                        style="width:100%;display:flex;align-items:center;gap:14px;background:#f0f7ff;border:2px solid #bfdbfe;border-radius:16px;padding:14px 16px;margin-bottom:12px;cursor:pointer;transition:all 0.2s;"
+                        onmouseover="this.style.background='#dbeafe'" onmouseout="this.style.background='#f0f7ff'">
+                        <div id="modalAvatarIdentitas" style="width:46px;height:46px;border-radius:50%;background:#dbeafe;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:#2563eb;flex-shrink:0;overflow:hidden;"></div>
+                        <div style="text-align:left;flex:1;">
+                            <p id="modalNamaIdentitas" style="font-weight:700;font-size:14px;color:#1e40af;margin:0 0 2px;"></p>
+                            <p style="font-size:12px;color:#3b82f6;margin:0;">Nama dan foto profilmu akan ditampilkan</p>
+                        </div>
+                        <svg width="20" height="20" fill="none" stroke="#3b82f6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </button>
+
+                    <!-- Opsi 2: Anonim -->
+                    <button onclick="submitUlasanFinal(false)"
+                        style="width:100%;display:flex;align-items:center;gap:14px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:16px;padding:14px 16px;cursor:pointer;transition:all 0.2s;"
+                        onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#f8fafc'">
+                        <div style="width:46px;height:46px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <svg width="24" height="24" fill="none" stroke="#94a3b8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                        </div>
+                        <div style="text-align:left;flex:1;">
+                            <p style="font-weight:700;font-size:14px;color:#475569;margin:0 0 2px;">Jangan Tampilkan Identitas</p>
+                            <p style="font-size:12px;color:#94a3b8;margin:0;">Ulasanmu akan tertulis sebagai <strong>Anonim</strong></p>
+                        </div>
+                        <svg width="20" height="20" fill="none" stroke="#94a3b8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 4.411m0 0L21 21"/></svg>
+                    </button>
+
+                    <!-- Batal — dengan safe area agar tidak tertutup navbar browser -->
+                    <div style="padding: 8px 0 calc(20px + env(safe-area-inset-bottom, 16px));">
+                        <button onclick="tutupIdentitasModal(null)"
+                            style="width:100%;background:#f1f5f9;border:none;color:#64748b;font-size:14px;font-weight:700;cursor:pointer;padding:14px;border-radius:14px;transition:background 0.15s;"
+                            onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'">
+                            Batal
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daftar Ulasan -->
+            <div id="ulasanList" class="space-y-3">
+                <div class="text-center py-6 text-slate-400 text-sm">
+                    <div class="animate-pulse">Memuat ulasan...</div>
+                </div>
             </div>
         </div>
 
         <!-- Footer kecil -->
         <p class="text-center text-xs text-slate-400 pb-6">WargaBantuWarga &copy; 2026 · Dibuat dengan sepenuh hati</p>
+
+    </div>
+</section>
+
+<!-- ===== HALAMAN PROFIL DEVELOPER ===== -->
+<section id="devProfilePage" class="page-section min-h-screen bg-slate-50">
+    <div class="max-w-lg mx-auto px-4 py-8">
+
+        <!-- Tombol kembali -->
+        <button onclick="showPage('contactPage')" class="flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-blue-600 transition mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Kembali
+        </button>
+
+        <!-- Header card -->
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden mb-4">
+            <div id="devProfileBanner" class="h-24 bg-gradient-to-r from-blue-500 to-blue-700"></div>
+            <div class="px-6 pb-6">
+                <div class="flex items-end gap-4 -mt-10 mb-4">
+                    <div id="devProfileAvatar" class="w-20 h-20 rounded-2xl flex items-center justify-center text-white font-black text-3xl border-4 border-white shadow-lg flex-shrink-0">J</div>
+                </div>
+                <h2 id="devProfileName" class="text-xl font-extrabold text-slate-900 mb-0.5"></h2>
+                <p id="devProfileRole" class="text-xs font-bold text-blue-500 mb-3"></p>
+                <p id="devProfileBio" class="text-sm text-slate-500 leading-relaxed mb-4"></p>
+
+                <!-- Skills -->
+                <div class="mb-4">
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Skills</p>
+                    <div id="devProfileSkills" class="flex flex-wrap gap-2"></div>
+                </div>
+
+                <!-- Hobi -->
+                <div class="mb-4">
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Hobi</p>
+                    <p id="devProfileHobi" class="text-sm text-slate-600"></p>
+                </div>
+
+                <!-- Sosmed links -->
+                <div class="flex gap-2">
+                    <a id="devProfileGithub" href="#" target="_blank"
+                        class="flex-1 flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-700 text-white py-2.5 rounded-xl font-bold text-sm transition">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                        GitHub
+                    </a>
+                    <a id="devProfileIG" href="#" target="_blank"
+                        class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 text-white py-2.5 rounded-xl font-bold text-sm transition">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        Instagram
+                    </a>
+                    <a id="devProfileEmail" href="#"
+                        class="flex-1 flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl font-bold text-sm transition">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        Email
+                    </a>
+                </div>
+            </div>
+        </div>
 
     </div>
 </section>
