@@ -1,31 +1,76 @@
-Nama Anggota Kelompok
-1. Rio Sadewa (418250100590) (Ketua)
-2. Joel Rondonuwu (41825010011)
-3. Raya Gibran Bachtiar (41825010081)
+# WargaBantuWarga
 
-Cara Instalasi & Menjalankan
+Platform marketplace jasa berbasis komunitas — menghubungkan pelanggan dengan penyedia jasa lokal di sekitar mereka.
 
-1. Persiapan Berkas
-Pastikan file `index.html` dan `script.js` berada dalam satu folder yang sama.
+Live: https://friendly-marigold-5e0269.netlify.app
 
-2. Konfigurasi Backend (Supabase)
-Buka file `script.js` dan pastikan konfigurasi API sudah sesuai dengan project:
-- `SUPABASE_URL`: URL project Supabase.
-- `SUPABASE_KEY`: Public Anon Key.
+---
 
-3. Menjalankan Server Lokal
-Karena aplikasi ini menggunakan ES Modules dan Google Auth, aplikasi tidak bisa dijalankan hanya dengan klik kanan > open file. wajib menggunakan server:
-- VS Code: Gunakan ekstensi Live Server. Klik kanan pada `index.html` lalu pilih Open with Live Server.
-- Akses: Aplikasi akan berjalan di `http://127.0.0.1:5500`.
+## Tim — GASPOL BERTIGA
 
-Fitur Aplikasi
-- Multi-Role: Login sebagai Pelanggan atau Mitra Jasa.
-- Smart Search: Cari jasa berdasarkan kategori dan filter.
-- Geolocation: Hitung jarak antara lokasi pengguna dengan penyedia jasa.
-- Order Tracking: Riwayat pesanan untuk memantau status jasa yang dipesan.
-- Auth: Mendukung Login Email/Password dan Google Sign-In.
+| Nama | NIM | Peran |
+|------|-----|-------|
+| Rio Sadewa (Ketua) | 41825010059 | Backend, Database, Deployment |
+| Joel Larry Junior Rondonuwu | 41825010011 | Frontend, Chat, Multi Akun |
+| Raya Gibran Bachtiar | 41825010081 | Full Stack, Order, Rating |
 
-Stack teknologi yang digunakan
-- Frontend: HTML5, Tailwind CSS, JavaScript (Vanilla).
-- Backend: Supabase (Auth, Database, Storage).
-- Icons: Lucide Icons & Google Material Symbols.
+---
+
+Stack Teknologi
+
+| Layer | Teknologi |
+|-------|-----------|
+| Frontend | HTML5, Tailwind CSS, Vanilla JavaScript |
+| Backend | Supabase (PostgreSQL + Auth + Storage) |
+| Libraries | bcryptjs, Cropper.js, PptxGenJS |
+| Deployment | Netlify (frontend), Supabase Cloud (database) |
+| Version Control | GitHub |
+
+---
+
+Cara Menjalankan
+
+Opsi 1 — Akses Langsung (Direkomendasikan)
+Buka browser dan kunjungi:
+```
+https://friendly-marigold-5e0269.netlify.app
+```
+
+Opsi 2 — Jalankan Lokal
+1. Clone repository:
+   ```bash
+   git clone https://github.com/GASPOL-BERTIGA/wargabantuwarga.git
+   cd wargabantuwarga
+   ```
+2. Buka file `index.html` langsung di browser (double-click), atau gunakan Live Server:
+   ```bash
+   npx live-server .
+   ```
+3. Tidak perlu `npm install` — semua library dimuat via CDN.
+
+> Catatan: Database Supabase sudah dikonfigurasi dan aktif. Tidak perlu setup database lokal.
+
+---
+
+AI Tools Used
+
+Proyek ini menggunakan AI sebagai alat bantu pengembangan:
+
+- Claude (Anthropic) — digunakan untuk membantu debugging, penulisan fungsi JavaScript, dan optimasi kode
+- Seluruh arsitektur, desain UI, dan logika bisnis dirancang oleh tim GASPOL BERTIGA
+- Kode yang dihasilkan AI selalu direview dan dimodifikasi oleh anggota tim sebelum digunakan
+
+---
+
+Fitur Utama
+
+- Login / Register (Email + Google OAuth) dengan bcrypt hash
+- Marketplace jasa dengan filter kategori, harga, dan GPS terdekat
+- Sistem booking & manajemen pesanan
+- Obrolan real-time (chat, reply, hapus pesan)
+- Rating & komentar dengan sistem balas
+- Wishlist jasa favorit
+- Dashboard mitra: Pesanan, Katalog, Keuangan, Reviewer
+- Level/badge pelanggan (5 level)
+- Multi akun & switch akun
+- Halaman Hubungi Kami
