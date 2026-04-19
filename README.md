@@ -39,7 +39,7 @@ https://friendly-marigold-5e0269.netlify.app
 Opsi 2 — Jalankan Lokal
 1. Clone repository:
    ```bash
-   git clone https://github.com/GASPOL-BERTIGA/wargabantuwarga.git
+   git clone https://github.com/sadewsws/wargabantuwarga.git
    cd wargabantuwarga
    ```
 2. Buka file `index.html` langsung di browser (double-click), atau gunakan Live Server:
