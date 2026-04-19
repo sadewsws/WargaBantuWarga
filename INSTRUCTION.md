@@ -125,6 +125,3 @@ Untuk mencoba fitur tanpa mendaftar:
 | Joel Rondonuwu | joeljuniorjoel@gmail.com | 6281110139102 |
 | Raya Gibran | rayagibranbachtiar@gmail.com | 6281381979923 |
 
----
-
-*Dibuat untuk keperluan akademis — Kelas Rekayasa Perangkat Lunak 2026*
