@@ -3127,12 +3127,25 @@ async function loadKeuangan() {
         var rj = await _supabase.from('jasa').select('id, nama').eq('user_id', activeUser.id);
         var myJasa = rj.data || [];
         var jasaIds = myJasa.map(function(j){ return j.id; });
-        if (jasaIds.length === 0) {
-            container.innerHTML = '<p class="text-slate-400 italic text-center py-6">Belum ada jasa terdaftar.</p>';
-            return;
+
+        // Query 1: orders berdasarkan jasa_id (order jasa marketplace biasa)
+        var ordersA = [];
+        if (jasaIds.length > 0) {
+            var roA = await _supabase.from('orders').select('id,jasa_id,jasa_nama,harga,status,created_at,seller_id').in('jasa_id', jasaIds).order('created_at', {ascending:false});
+            ordersA = roA.data || [];
         }
-        var ro = await _supabase.from('orders').select('id,jasa_id,jasa_nama,harga,status,created_at').in('jasa_id', jasaIds).order('created_at', {ascending:false});
-        var orders = ro.data || [];
+
+        // Query 2: orders berdasarkan seller_id (dari selesaikanDariPenyedia — kebutuhan warga)
+        var roB = await _supabase.from('orders').select('id,jasa_id,jasa_nama,harga,status,created_at,seller_id').eq('seller_id', activeUser.id).order('created_at', {ascending:false});
+        var ordersB = roB.data || [];
+
+        // Gabungkan & deduplikasi berdasarkan id
+        var seenIds = new Set();
+        var orders = [];
+        [].concat(ordersA, ordersB).forEach(function(o) {
+            if (!seenIds.has(o.id)) { seenIds.add(o.id); orders.push(o); }
+        });
+        orders.sort(function(a,b){ return new Date(b.created_at) - new Date(a.created_at); });
         var totalPendapatan = 0, totalSelesai = 0, totalPending = 0;
         orders.forEach(function(o) {
             if (o.status === 'selesai') { totalPendapatan += Number(o.harga||0); totalSelesai++; }
@@ -4955,7 +4968,7 @@ var _devData = {
         role:   'Mahasiswa Sistem Informasi — Universitas Mercu Buana',
         bio:    'Hai, terima kasih sudah berkunjung! Saya masih dalam tahap awal sebagai developer, tapi punya semangat besar untuk terus belajar dan berkembang. Saya tertarik mengeksplorasi teknologi baru, membangun proyek sederhana, dan memperbaiki diri dari setiap kesalahan. Ke depan, saya ingin menjadi developer yang tidak hanya bisa coding, tapi juga memberi solusi nyata.',
         skills: ['HTML', 'CSS', 'JavaScript'],
-        hobi:   'Musik',
+        hobi:   'Musik (mendengarkan dan bermain)',
         github: 'https://github.com/sadewsws',
         ig:     'https://www.instagram.com/riosdwaa?igsh=NG82dnFuMm5yYzJ3&utm_source=qr',
         igName: '@riosdwaa',
@@ -5832,9 +5845,9 @@ function renderKebutuhanPublic(list) {
 
         return '<div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex flex-col gap-3 hover:border-blue-200 hover:shadow-md transition-all">' +
             '<div class="flex items-center gap-3">' +
-                '<img src="' + avatar + '" class="w-10 h-10 rounded-xl object-cover border border-slate-100 flex-shrink-0" onerror="this.src=\'https://ui-avatars.com/api/?name=U&background=dbeafe&color=2563eb&bold=true&size=64\'">' +
+                '<img src="' + avatar + '" class="w-10 h-10 rounded-xl object-cover border border-slate-100 flex-shrink-0 cursor-pointer hover:opacity-80 transition" onclick="bukaProfilPublik(\'' + k.user_id + '\')" onerror="this.src=\'https://ui-avatars.com/api/?name=U&background=dbeafe&color=2563eb&bold=true&size=64\'">' +
                 '<div class="flex-1 min-w-0">' +
-                    '<p class="font-bold text-slate-800 text-sm truncate">@' + escHtml(posterName) + '</p>' +
+                    '<button onclick="bukaProfilPublik(\'' + k.user_id + '\')" class="font-bold text-slate-800 text-sm truncate hover:text-blue-600 transition text-left w-full">@' + escHtml(posterName) + '</button>' +
                     '<p class="text-xs text-slate-400">' + timeAgo + '</p>' +
                 '</div>' +
                 '<span class="text-xs font-bold px-2.5 py-1 rounded-full border ' + katClass + '">' + (k.kategori || '') + '</span>' +
@@ -5880,11 +5893,13 @@ async function applyKebutuhanPublic(kebutuhanId, ownerId) {
     // Toast informatif
     showToast('Lamaran terkirim! Tunggu pemilik menerima lamaranmu.');
 
-    // Hapus card dari list (card langsung hilang)
-    _allKebutuhanData = _allKebutuhanData.filter(function(k){ return String(k.id) !== String(kebutuhanId); });
-    filterKebutuhanPublic();
-    var badge = document.getElementById('kebutuhanBadge');
-    if (badge) { badge.textContent = _allKebutuhanData.length; badge.classList.toggle('hidden', _allKebutuhanData.length === 0); }
+    // Jangan hapus card — ubah tombol apply jadi 'Sudah Dilamar'
+    var applyBtnsAfter = document.querySelectorAll('button[onclick*="applyKebutuhanPublic(\'' + kebutuhanId + '\'"]');
+    applyBtnsAfter.forEach(function(b) {
+        b.disabled = true;
+        b.textContent = '✓ Lamaran Terkirim';
+        b.className = 'w-full py-2.5 rounded-xl font-bold text-sm bg-slate-100 text-slate-400 cursor-not-allowed';
+    });
 }
 
 // 
@@ -6051,6 +6066,9 @@ async function loadRiwayatApply() {
                             'class="flex-1 py-2 rounded-xl font-bold text-xs bg-blue-600 hover:bg-blue-700 text-white transition">Chat</button>' +
                         '<button onclick="selesaikanPekerjaan(\'' + a.id + '\',\'' + a.kebutuhan_id + '\',\'' + a.penyedia_id + '\',\'' + escHtml(keb.judul || 'Pekerjaan') + '\',' + (keb.budget || 0) + ')" ' +
                             'class="flex-1 py-2 rounded-xl font-bold text-xs bg-purple-600 hover:bg-purple-700 text-white transition shadow-sm">Selesai</button>';
+                    actionBtns += '<button onclick="batalTerimaApply(\'' + a.id + '\',' +
+                        '\'' + a.penyedia_id + '\',\'' + escHtml(nama) + '\')" ' +
+                        'class="w-full mt-1 py-2 rounded-xl font-bold text-[11px] bg-red-50 hover:bg-red-100 text-red-500 transition border border-red-100">✕ Tolak & Buka Lagi</button>';
 
                 } else if (a.status === 'selesai') {
                     statusBadge = '<span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-200"> Selesai</span>';
@@ -6126,6 +6144,23 @@ async function tolakApply(applyId) {
         loadRiwayatApply();
     } catch(err) {
         alert('Gagal menolak: ' + err.message);
+    }
+}
+
+
+// Batalkan penerimaan lamaran (kembalikan ke pending agar penjasa bisa ditolak)
+async function batalTerimaApply(applyId, penyediaId, penyediaNama) {
+    if (!confirm('Batalkan penerimaan @' + penyediaNama + '? Postingan akan tetap terbuka di publik.')) return;
+    try {
+        var { error } = await _supabase
+            .from('aplikasi_kebutuhan')
+            .update({ status: 'ditolak' })
+            .eq('id', applyId);
+        if (error) throw error;
+        showToast('Penerimaan dibatalkan. Postingan tetap aktif di pencarian.');
+        loadRiwayatApply();
+    } catch(err) {
+        alert('Gagal membatalkan: ' + err.message);
     }
 }
 
@@ -6483,9 +6518,12 @@ async function selesaikanDariPenyedia(applyId, kebutuhanId, ownerId, judulKerja,
                 harga:     amt,
                 status:    'selesai',
             };
-            // Coba dengan seller_id dulu
+            // Insert dengan seller_id — wajib agar masuk di loadKeuangan
             var { error: e2 } = await _supabase.from('orders').insert([Object.assign({}, insertObj, { seller_id: activeUser.id })]);
-            if (e2) await _supabase.from('orders').insert([insertObj]);
+            if (e2) {
+                console.warn('Insert with seller_id failed, retrying without:', e2.message);
+                await _supabase.from('orders').insert([insertObj]);
+            }
         }
 
         showToast('Pekerjaan "' + judulKerja + '" selesai! Tercatat di riwayat kedua pihak.');
@@ -6493,9 +6531,8 @@ async function selesaikanDariPenyedia(applyId, kebutuhanId, ownerId, judulKerja,
         // Reload riwayat jasa
         loadRiwayatJasa();
 
-        // Jika tab keuangan terbuka, refresh
-        var keuEl = document.getElementById('dashKeuangan');
-        if (keuEl && !keuEl.classList.contains('hidden')) loadKeuangan();
+        // Selalu refresh keuangan agar pendapatan langsung update
+        loadKeuangan();
 
     } catch(err) {
         console.error('selesaikanDariPenyedia error:', err);
