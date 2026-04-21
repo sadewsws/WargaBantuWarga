@@ -18,7 +18,7 @@ Pastikan perangkat Anda memiliki:
 Buka browser dan akses langsung:
 
 ```
-(https://friendly-marigold-5e0269.netlify.app/)
+https://friendly-marigold-5e0269.netlify.app/
 ```
 
 > Tidak perlu instalasi apapun. Website langsung bisa digunakan.
