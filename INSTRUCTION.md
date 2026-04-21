@@ -1,126 +1,186 @@
 # INSTRUCTION.md — WargaBantuWarga
 
-Panduan instalasi dan menjalankan aplikasi WargaBantuWarga.
+Panduan langkah-langkah **instalasi & menjalankan** aplikasi yang sudah diuji.
 
 ---
 
-## Informasi Tim
+## Prasyarat
 
-**Nama Tim:** GASPOL BERTIGA
-
-| Nama | NIM | Kelas |
-|------|-----|-------|
-| Rio Sadewa *(Ketua Tim)* | 41825010059 | Rekayasa Perangkat Lunak |
-| Joel Larry Junior Rondonuwu | 41825010011 | Rekayasa Perangkat Lunak |
-| Raya Gibran Bachtiar | 41825010081 | Rekayasa Perangkat Lunak |
+Pastikan perangkat Anda memiliki:
+- Browser modern (Google Chrome, Firefox, Edge — versi terbaru)
+- Koneksi internet aktif
+- *(Opsional)* Ekstensi **Live Server** di VS Code untuk menjalankan secara lokal
 
 ---
 
-## Cara Menjalankan Aplikasi
+## Cara Menjalankan — Opsi 1: Via Hosting (Paling Mudah)
 
-### Akses Langsung (Paling Mudah)
+Buka browser dan akses langsung:
+
 ```
-https://friendly-marigold-5e0269.netlify.app
+(https://friendly-marigold-5e0269.netlify.app/)
 ```
-Tidak perlu setup apapun — buka URL di browser dan langsung bisa digunakan.
+
+> Tidak perlu instalasi apapun. Website langsung bisa digunakan.
 
 ---
 
-### Menjalankan Secara Lokal
+## Cara Menjalankan — Opsi 2: Localhost (Lokal)
 
-#### Prasyarat
-- Browser modern (Chrome, Firefox, Edge, Safari)
-- Koneksi internet (untuk Supabase database)
-- Opsional: [Live Server extension](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) di VS Code
+### Langkah 1 — Clone / Download Repository
 
-#### Langkah-Langkah
-
-**1. Clone repository**
+**Via Git:**
 ```bash
 git clone https://github.com/sadewsws/wargabantuwarga.git
 cd wargabantuwarga
 ```
 
-**2. Buka aplikasi**
+**Via ZIP:**
+1. Download file ZIP dari GitHub
+2. Ekstrak folder
+3. Buka folder hasil ekstrak
 
-**Cara A — Langsung buka file:**
+### Langkah 2 — Struktur File
+
+Pastikan struktur file seperti berikut:
 ```
-Klik dua kali pada file index.html
+wargabantuwarga/
+├── index.html       ← File utama aplikasi
+├── script.js        ← Semua logika JavaScript
+├── README.md        ← Informasi tim & proyek
+└── INSTRUCTION.md   ← File ini
 ```
 
-**Cara B — Dengan Live Server (VS Code):**
-```
-1. Buka folder project di VS Code
-2. Klik kanan pada index.html
-3. Pilih "Open with Live Server"
-4. Browser otomatis terbuka di localhost:5500
-```
+### Langkah 3 — Jalankan Aplikasi
 
-**Cara C — Dengan Python (tanpa ekstensi):**
+**Cara A — Klik Langsung (paling mudah):**
+1. Buka folder project
+2. Double-click file `index.html`
+3. Browser akan membuka aplikasi
+
+**Cara B — Via VS Code + Live Server (direkomendasikan):**
+1. Buka VS Code
+2. Buka folder project: `File → Open Folder`
+3. Klik kanan pada `index.html`
+4. Pilih **"Open with Live Server"**
+5. Browser otomatis terbuka di `http://127.0.0.1:5500`
+
+**Cara C — Via Terminal (Python HTTP Server):**
 ```bash
 # Python 3
 python -m http.server 8080
 
-# Lalu buka browser: http://localhost:8080
-```
-
-> ⚠️ **Penting:** Tidak perlu `npm install` atau setup backend. Semua library (Tailwind, bcryptjs, Cropper.js) dimuat otomatis via CDN. Database Supabase sudah aktif di cloud.
-
----
-
-## Struktur File
-
-```
-wargabantuwarga/
-├── index.html          # Halaman utama aplikasi (SPA)
-├── script.js           # Seluruh logika JavaScript
-├── README.md           # Dokumentasi proyek
-├── INSTRUCTION.md      # File ini — panduan instalasi & running
+# Buka browser ke:
+# http://localhost:8080
 ```
 
 ---
 
-## Ketentuan Teknis
+## Fitur yang Memerlukan Internet
 
-### Jenis Website
-- Full Front-End + Back-End sederhana
-- Framework: Vanilla HTML + JavaScript + Tailwind CSS
-- Database: Supabase (PostgreSQL cloud)
+> Aplikasi ini menggunakan **Supabase** sebagai backend. Fitur berikut **memerlukan koneksi internet aktif**:
 
-### Spesifikasi
-- Responsif: desktop, tablet, dan mobile
-- Hosting: Netlify (dapat diakses publik)
-- Interaktivitas: Login, API Supabase, database cloud
-
-### Keamanan
-- Password di-hash menggunakan **bcrypt** (bcryptjs, cost factor 10)
-- Auto-upgrade plain text password lama ke bcrypt saat login
-- Tidak ada password yang disimpan dalam bentuk plain text
-- Supabase Row Level Security aktif pada tabel sensitif
-
-### AI Tools
-Penggunaan AI (Claude oleh Anthropic) sebagai alat bantu pengembangan telah dicantumkan di `README.md` pada bagian **"AI Tools Used"**.
+| Fitur | Keterangan |
+|-------|------------|
+| Login Google | Memerlukan akses ke Google OAuth |
+| Daftar / Login Manual | Terhubung ke Supabase Auth |
+| Melihat / Menambah Jasa | Data dari database Supabase |
+| Chat Real-time | Menggunakan Supabase Realtime (WebSocket) |
+| Upload Gambar | Menggunakan Supabase Storage |
+| Rating & Ulasan | Tersimpan di database Supabase |
 
 ---
 
-## Akun Demo (Opsional)
+## Cara Menggunakan Aplikasi
 
-Untuk mencoba fitur tanpa mendaftar:
+> **Catatan penting:** Satu akun bisa berganti antara mode **Pencari Jasa** dan **Penyedia Jasa** kapan saja langsung dari Dashboard — tidak perlu membuat akun terpisah.
 
-| Role | Email | Password |
-|------|-------|----------|
-| Pelanggan | demo_pelanggan@warga.com | demo123 |
-| Mitra Jasa | demo_mitra@warga.com | demo123 |
+### Sebagai Pencari Jasa:
+1. Buka website → Klik **"Masuk"**
+2. Pilih **Login dengan Google** atau daftar manual
+3. Di Dashboard, pilih mode **"Butuh Jasa"**
+4. Buka halaman **"Telusuri"** untuk mencari jasa
+5. Klik jasa → lihat detail & profil penyedia
+6. Klik **"Chat"** untuk menghubungi penyedia
+7. Setelah selesai, beri **Ulasan & Rating**
 
-> Akun demo dibuat saat submission. Jika tidak tersedia, silakan daftar akun baru.
+### Sebagai Penyedia Jasa:
+1. Login → buka **Dashboard**
+2. Pilih mode **"Penyedia Jasa"**
+3. Tambahkan listing jasa di tab **"Katalog Jasa"**
+4. Tunggu & balas pesan dari pencari jasa di menu **"Obrolan"**
+5. Lamar kebutuhan yang diposting warga di tab **"Lamaran"**
+6. Pantau pendapatan di tab **"Keuangan"**
 
 ---
 
-## Kontak Tim
+## Konfigurasi (Sudah Terpasang)
 
-| Nama | Email | WhatsApp |
-|------|-------|----------|
-| Rio Sadewa (Ketua) | sadwwario@gmail.com | 6285894901373 |
-| Joel Rondonuwu | joeljuniorjoel@gmail.com | 6281110139102 |
-| Raya Gibran | rayagibranbachtiar@gmail.com | 6281381979923 |
+File `script.js` sudah dikonfigurasi dengan Supabase project kami:
+
+```javascript
+// Konfigurasi ini sudah aktif — tidak perlu diubah untuk demo
+const SUPABASE_URL = 'https://hwolvggrgdtduuxdyzdt.supabase.co';
+const SUPABASE_KEY = '...'; // Key sudah tertanam di script.js
+```
+
+> **Catatan untuk Juri:** Supabase project kami berstatus aktif dan dapat diakses. Data demo sudah tersedia di database.
+
+---
+
+## Struktur Database (Supabase)
+
+Tabel-tabel yang **aktif digunakan**:
+
+| Tabel | Fungsi |
+|-------|--------|
+| `profiles` | Data profil pengguna |
+| `jasa` | Listing jasa yang ditawarkan |
+| `kebutuhan` | Postingan kebutuhan dari warga |
+| `orders` | Riwayat transaksi & status pesanan |
+| `messages` | Pesan chat antar pengguna (real-time) |
+| `ratings` / `ulasan` | Rating & ulasan setelah transaksi |
+| `komentar` | Komentar pada posting kebutuhan |
+| `wishlist` | Jasa favorit pengguna |
+| `aplikasi_kebutuhan` | Lamaran dari penyedia ke kebutuhan |
+| `users` | Data user Supabase Auth |
+
+> **Catatan:** Tabel `mitra`, `services`, dan `pesanan` merupakan sisa pengembangan awal dan tidak digunakan secara aktif.
+
+> **Catatan RLS:** Row Level Security (RLS) pada beberapa tabel masih belum sepenuhnya diaktifkan. Ini adalah perbaikan yang sedang dalam proses.
+
+---
+
+## AI Tools yang Digunakan
+
+Sesuai ketentuan lomba, berikut adalah AI tools yang digunakan sebagai **alat bantu** pengembangan:
+
+| AI Tool | Kegunaan |
+|---------|----------|
+| **ChatGPT** | Debugging, menyusun logika fungsi JavaScript, memperbaiki error kode |
+| **Claude AI** | Struktur komponen UI, penulisan dokumentasi teknis, optimasi kode |
+| **GitHub Copilot** | Autocomplete kode berulang, boilerplate HTML/CSS, refactoring cepat |
+
+> **Penting:** Semua kode telah dipelajari, dimodifikasi, dan dikembangkan secara mandiri oleh tim. AI hanya digunakan sebagai alat bantu — bukan generator kode utama.
+
+---
+
+## Troubleshooting
+
+| Masalah | Solusi |
+|---------|--------|
+| Halaman kosong / error | Pastikan membuka via server (Live Server / Python), bukan double-click langsung |
+| Login Google gagal | Pastikan koneksi internet aktif dan tidak menggunakan VPN |
+| Data tidak muncul | Refresh halaman (Ctrl+R), pastikan internet aktif |
+| Chat tidak real-time | Supabase Realtime butuh koneksi stabil, coba reload |
+| Gambar tidak muncul | Koneksi ke Supabase Storage terputus, cek internet |
+
+---
+
+## Informasi Teknis
+
+- **Tidak memerlukan** Node.js, npm, atau build process apapun
+- **Tidak ada** file `.env` yang perlu dikonfigurasi
+- **Kompatibel** dengan semua OS (Windows, macOS, Linux)
+- **Ukuran project** (tanpa node_modules): < 1 MB
 
